@@ -1,0 +1,76 @@
+.calendar {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 700;
+  font-family: var(--font-serif);
+  margin-bottom: 12px;
+}
+
+.calendar-header button {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 26px;
+  height: 26px;
+  font-size: 0.95rem;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.calendar-header button:hover {
+  background: var(--cream);
+}
+
+.calendar-weekdays,
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+}
+
+.calendar-weekdays {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.calendar-weekdays .sun {
+  color: #c0442c;
+}
+
+.calendar-weekdays .sat {
+  color: var(--navy);
+}
+
+.cal-cell {
+  padding: 6px 0;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.cal-cell.sun {
+  color: #c0442c;
+}
+
+.cal-cell.sat {
+  color: var(--navy);
+}
+
+.cal-cell.busy {
+  background: var(--cream-2);
+  color: var(--text-muted);
+}
+
+.cal-cell.today {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+}
