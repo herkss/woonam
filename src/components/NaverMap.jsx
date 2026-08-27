@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from 'react'
 // 네이버 클라우드 플랫폼(console.ncloud.com) > AI·NAVER API > Maps 에서
 // Application을 등록하고 발급받은 Client ID로 교체하세요.
 // 등록 시 "Web 서비스 URL"에 배포된 Cloudflare Pages 도메인을 반드시 추가해야 합니다.
-const NAVER_MAP_CLIENT_ID = 'YOUR_NCP_CLIENT_ID'
+const NAVER_MAP_CLIENT_ID = 'pwi3io0lps'
 
 const JEONJU_FALLBACK_CENTER = { lat: 35.8242, lng: 127.148 }
 
