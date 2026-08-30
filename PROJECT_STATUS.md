@@ -50,21 +50,29 @@ React(Vite)로 만든 식당 홈페이지. 참고 디자인은 사용자가 제�
 헤더의 "예약 확인/변경"에서 비밀번호 또는 문자 인증으로 본인 확인 후 예약 수정/취소 가능.
 
 - 프론트엔드: `src/components/ReservationModal.jsx`(신규 예약), `ReservationManage.jsx`(확인/변경), `src/lib/mask.js`(이름/전화번호 마스킹 — "김x자,010-2xx7-23x7,7명,5시" 형식), `src/lib/useOtp.js`, `src/lib/api.js`
-- 백엔드: Cloudflare Pages Functions (`functions/api/**`) + D1 데이터베이스 (`migrations/0001_init.sql`)
+- 백엔드: **Cloudflare Workers + Static Assets** (예전 Pages Functions 방식이 아님 — 아래 "배포 아키텍처 변경" 참고). API 로직 자체는 `functions/api/**`에 있고, `worker/index.js`가 진입점에서 `/api/*`만 라우팅해서 그 파일들의 핸들러를 그대로 호출함. 그 외 경로는 `env.ASSETS.fetch(request)`로 정적 파일(`dist`) 서빙.
+- D1 데이터베이스: `migrations/0001_init.sql`
 - 문자 발송: Solapi API 사용 (`functions/_shared/sms.js`). **API 키를 아직 등록 안 한 상태에서도 정상 동작** — 키가 없으면 실제 발송 대신 콘솔 로그로만 남기는 개발용 폴백이 들어있음
-- 로컬에서 `npm run build && npm run pages:dev` (내부적으로 `wrangler pages dev dist` 실행)로 API까지 포함해 전체 흐름 테스트 가능. `npm run d1:migrate:local`로 로컬 D1에 스키마 적용.
-- curl로 OTP 요청/검증/예약생성/단일사용토큰/마스킹목록/PIN조회/수정/취소 전 구간 테스트 완료함 (2026-08-30)
+- 로컬 전체 테스트: `npm run worker:dev` (`npm run build && wrangler dev`) — 정적 페이지 + API + D1(로컬) + 실제 Solapi 발송까지 전부 포함해서 확인 가능. 최초 1회 `npm run d1:migrate:local`로 로컬 D1에 스키마 적용 필요.
+- curl / 실제 문자 수신으로 OTP 요청·검증, 예약 생성/조회/수정/취소, 단일사용토큰, 마스킹목록, PIN조회 전 구간 테스트 완료 (2026-08-30, 로컬 wrangler dev + 실제 Solapi 발신 확인)
+
+### 배포 아키텍처 변경 (2026-08-30)
+
+처음엔 Cloudflare **Pages Functions**(`functions/` 폴더 자동 라우팅) 방식으로 만들었는데, Cloudflare 대시보드에서 새 프로젝트를 만드니 Pages가 아니라 **Workers(신규 통합 빌드, "Workers Builds")**로 생성되어 배포 명령이 `wrangler pages deploy`가 아니라 `wrangler deploy`로 실행됨. Workers는 `functions/` 자동 라우팅을 지원하지 않고, 대신 `wrangler.toml`의 `[assets]` 설정 + 진입점 Worker 스크립트(`worker/index.js`)가 라우팅을 직접 처리하는 구조라서 이에 맞게 변경함.
+- `wrangler.toml`: `pages_build_output_dir` 대신 `main = "worker/index.js"` + `[assets] directory = "./dist" binding = "ASSETS" run_worker_first = ["/api/*"]`
+- `functions/api/**`의 로직 파일들은 그대로 두고(수정 없음), `worker/index.js`가 얇은 라우터로서 그걸 호출함 — 나중에 실제 Pages 프로젝트로 옮기게 되면 `functions/`를 그대로 재사용 가능
 
 **실제 배포 전 해야 할 일**:
-1. `npx wrangler d1 create woonam-reservations` 실행 후 나온 `database_id`를 `wrangler.toml`의 `YOUR_D1_DATABASE_ID`에 채워넣기
-2. `npm run d1:migrate:remote`로 운영 D1에 스키마 적용
-3. Cloudflare Pages 대시보드 → 프로젝트 설정 → 환경 변수(Secrets)에 아래 값 등록 (`.dev.vars.example` 참고):
-   - `SOLAPI_API_KEY`, `SOLAPI_API_SECRET` — Solapi 콘솔에서 발급. **API 키 생성 시 CIDR 대신 "모든 IP 허용" 선택** (Cloudflare Pages Functions는 고정 발신 IP가 없어서 IP 제한이 안 맞음)
+1. ~~`npx wrangler d1 create woonam-reservations`~~ — 완료. `database_id`는 `wrangler.toml`에 이미 반영됨
+2. ~~`npm run d1:migrate:remote`~~ — 완료. 운영 D1에 스키마 적용됨
+3. Cloudflare 대시보드 → **Workers & Pages → woonam** → Settings → **Variables and Secrets**에 아래 값 등록 (`.dev.vars.example` 참고):
+   - `SOLAPI_API_KEY`, `SOLAPI_API_SECRET` — Solapi 콘솔에서 발급. **API 키 생성 시 CIDR 대신 "모든 IP 허용" 선택** (Cloudflare Workers는 고정 발신 IP가 없어서 IP 제한이 안 맞음)
    - `SOLAPI_SENDER_NUMBER` — Solapi에 사전 등록된 발신번호
    - `OWNER_PHONE` — 점주가 예약 알림을 받을 번호
-   - `TOKEN_SECRET` — 임의의 긴 랜덤 문자열 (OTP 해시/토큰 서명용)
-4. Cloudflare Pages는 이제 `dist` 폴더 업로드만으로는 API가 동작하지 않음 — Git 연동 배포(빌드 명령 `npm run build`, 출력 디렉토리 `dist`)로 전환하거나, `npx wrangler pages deploy dist`로 배포해야 `functions/` 폴더가 함께 배포됨
-5. (나중에) 카카오 알림톡: 비즈니스 채널 개설 + 템플릿 사전승인 완료되면 `functions/_shared/sms.js`에 알림톡 발송 분기 추가 예정
+   - `TOKEN_SECRET` — 임의의 긴 랜덤 문자열 (OTP 해시/토큰 서명용, 로컬 `.dev.vars`에 쓴 값과 같게 맞추면 편함)
+4. Settings → **Bindings**에서 D1 데이터베이스(`woonam-reservations`, 바인딩 이름 `DB`)가 연결돼 있는지 확인 (git 연동이면 `wrangler.toml`을 자동 인식하지만, 대시보드에서 이미 수동으로 한 번 추가한 이력이 있어서 중복/충돌 없는지 확인 필요)
+5. 위 설정 후 git push하면 자동 재배포됨. 지금 당장은 대시보드에서 "Retry deployment"
+6. (나중에) 카카오 알림톡: 비즈니스 채널 개설 + 템플릿 사전승인 완료되면 `functions/_shared/sms.js`에 알림톡 발송 분기 추가 예정
 
 ## 배포 방법 (재확인용)
 
@@ -74,7 +82,7 @@ npm install      # 최초 1회만 (의존성 변경 시에도)
 npm run build    # 코드 수정할 때마다 실행 → dist/ 폴더 생성
 ```
 
-`dist` 폴더를 Cloudflare Pages 대시보드 → **Upload assets**에 그대로(폴더째) 드래그 앤 드롭.
+**변경됨**: 이제 `dist` 폴더만 드래그 앤 드롭하는 방식은 안 됨 (API가 동작 안 함). GitHub(`herkss/woonam`) 연동 배포로 전환됨 — main 브랜치에 push하면 Cloudflare가 자동으로 `npm run build` 실행 후 `wrangler deploy`로 배포함. 빌드/배포 설정은 대시보드의 woonam 프로젝트 Settings에서 확인/수정.
 
 ## 파일 구조
 

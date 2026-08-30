@@ -8,7 +8,8 @@
     "build": "vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "pages:dev": "npm run build && wrangler pages dev dist",
+    "worker:dev": "npm run build && wrangler dev",
+    "worker:deploy": "npm run build && wrangler deploy",
     "d1:migrate:local": "wrangler d1 execute woonam-reservations --local --file=./migrations/0001_init.sql",
     "d1:migrate:remote": "wrangler d1 execute woonam-reservations --remote --file=./migrations/0001_init.sql"
   },

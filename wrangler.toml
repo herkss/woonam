@@ -1,18 +1,21 @@
 name = "woonam"
-pages_build_output_dir = "dist"
+main = "worker/index.js"
 compatibility_date = "2026-08-01"
 
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = ["/api/*"]
+
 # D1 데이터베이스 바인딩
-# 1) `npx wrangler d1 create woonam-reservations` 실행 후 출력된 database_id를 아래에 붙여넣으세요.
-# 2) 로컬 개발: `npx wrangler d1 execute woonam-reservations --local --file=./migrations/0001_init.sql`
-# 3) 배포 후 1회: `npx wrangler d1 execute woonam-reservations --remote --file=./migrations/0001_init.sql`
+# 로컬 개발: `npm run d1:migrate:local` / 운영: `npm run d1:migrate:remote`
 [[d1_databases]]
 binding = "DB"
 database_name = "woonam-reservations"
 database_id = "34704691-0cff-44a9-88b6-01fb5878ded3"
 
-# 아래 값들은 커밋하지 말고 Cloudflare Pages 대시보드(설정 > 환경 변수/보안 변수) 또는
-# `npx wrangler pages secret put <이름>` 으로 등록하세요. 로컬 개발용은 .dev.vars 참고.
+# 아래 값들은 커밋하지 말고 Cloudflare 대시보드(Worker 설정 > Variables and Secrets) 또는
+# `npx wrangler secret put <이름>` 으로 등록하세요. 로컬 개발용은 .dev.vars 참고.
 # - SOLAPI_API_KEY
 # - SOLAPI_API_SECRET
 # - SOLAPI_SENDER_NUMBER   (Solapi에 등록된 발신번호, 예: 0212345678)
