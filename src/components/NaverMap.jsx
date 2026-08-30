@@ -7,15 +7,27 @@ const NAVER_MAP_CLIENT_ID = 'qy3z93rswz'
 
 const JEONJU_FALLBACK_CENTER = { lat: 35.8242, lng: 127.148 }
 
+// The `submodules=geocoder` script tag itself finishes loading (fires
+// `onload`) before the geocoder submodule it kicks off loading in the
+// background has actually attached `naver.maps.Service` — so we poll for
+// it instead of trusting `onload` alone.
+function waitForGeocoderService(resolve) {
+  if (window.naver && window.naver.maps && window.naver.maps.Service) {
+    resolve(window.naver)
+    return
+  }
+  setTimeout(() => waitForGeocoderService(resolve), 50)
+}
+
 function loadNaverMapsScript(clientId) {
   return new Promise((resolve, reject) => {
-    if (window.naver && window.naver.maps) {
+    if (window.naver && window.naver.maps && window.naver.maps.Service) {
       resolve(window.naver)
       return
     }
     const existing = document.getElementById('naver-map-sdk')
     if (existing) {
-      existing.addEventListener('load', () => resolve(window.naver))
+      existing.addEventListener('load', () => waitForGeocoderService(resolve))
       existing.addEventListener('error', reject)
       return
     }
@@ -23,7 +35,7 @@ function loadNaverMapsScript(clientId) {
     script.id = 'naver-map-sdk'
     script.src = `https://oapi.map.naver.com/openapi/v3/maps.js?ncpKeyId=${clientId}&submodules=geocoder`
     script.async = true
-    script.onload = () => resolve(window.naver)
+    script.onload = () => waitForGeocoderService(resolve)
     script.onerror = reject
     document.head.appendChild(script)
   })
@@ -43,32 +55,39 @@ export default function NaverMap({ address }) {
 
     loadNaverMapsScript(NAVER_MAP_CLIENT_ID)
       .then((naver) => {
-        if (cancelled) return
+        if (cancelled || !mapRef.current) return
+
+        const fallbackCenter = new naver.maps.LatLng(
+          JEONJU_FALLBACK_CENTER.lat,
+          JEONJU_FALLBACK_CENTER.lng,
+        )
+        const map = new naver.maps.Map(mapRef.current, {
+          center: fallbackCenter,
+          zoom: 16,
+        })
+        setStatus('ready')
 
         naver.maps.Service.geocode({ query: address }, (geoStatus, response) => {
-          if (cancelled || !mapRef.current) return
-
-          const result =
-            geoStatus === naver.maps.Service.Status.OK
-              ? response.v2.addresses[0]
-              : null
-          if (!result) {
+          if (cancelled) return
+          if (geoStatus !== naver.maps.Service.Status.OK) {
             console.error('NaverMap geocode failed', geoStatus, response)
+            return
           }
-
-          const center = result
-            ? new naver.maps.LatLng(result.y, result.x)
-            : new naver.maps.LatLng(
-                JEONJU_FALLBACK_CENTER.lat,
-                JEONJU_FALLBACK_CENTER.lng,
-              )
-
-          const map = new naver.maps.Map(mapRef.current, { center, zoom: 16 })
-          if (result) {
-            new naver.maps.Marker({ position: center, map })
+          const result = response.v2.addresses[0]
+          if (!result) {
+            console.error('NaverMap geocode: no matching address', address, response)
+            return
           }
-
-          setStatus('ready')
+          const point = new naver.maps.LatLng(result.y, result.x)
+          // Re-create the map anchored at the geocoded point (instead of
+          // calling setCenter on the existing instance) so that if the SDK
+          // later re-applies its construction-time center on a layout
+          // resize, it snaps back to the correct point, not the fallback.
+          const freshMap = new naver.maps.Map(mapRef.current, {
+            center: point,
+            zoom: 16,
+          })
+          new naver.maps.Marker({ position: point, map: freshMap })
         })
       })
       .catch(() => setStatus('error'))
