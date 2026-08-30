@@ -102,7 +102,11 @@ export default function Calendar({ initialDate = new Date(), onSelectDate, onAdm
             >
               <span className="cal-day-num">{d || ''}</span>
               <span
-                className={['cal-dot', hasReservation ? '' : 'hidden', past ? 'muted' : '']
+                className={[
+                  'cal-dot',
+                  hasReservation ? '' : 'hidden',
+                  hasReservation && past ? 'muted' : '',
+                ]
                   .filter(Boolean)
                   .join(' ')}
                 aria-label={hasReservation ? '예약 있음' : undefined}
