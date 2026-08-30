@@ -128,15 +128,19 @@
 .form-inline {
   display: flex;
   gap: 8px;
+  justify-content: flex-end;
 }
 
 .form-inline input {
   flex: 1;
+  min-width: 0;
 }
 
 .form-inline .btn {
   flex-shrink: 0;
   white-space: nowrap;
+  padding: 9px 12px;
+  font-size: 0.82rem;
 }
 
 .form-hint {
