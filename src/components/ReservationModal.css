@@ -64,6 +64,53 @@
   margin-top: 12px;
 }
 
+.reservation-notice {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.reservation-notice-title {
+  margin: 10px 0 4px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.reservation-notice-title:first-child {
+  margin-top: 0;
+}
+
+.reservation-notice ul {
+  margin: 0 0 4px;
+  padding-left: 16px;
+  list-style: disc;
+}
+
+.reservation-notice li {
+  margin: 2px 0;
+}
+
+.modal-form .reservation-agree {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
+
+.reservation-agree input {
+  width: auto;
+  flex: none;
+}
+
 .modal-existing {
   background: var(--cream);
   border-radius: 8px;

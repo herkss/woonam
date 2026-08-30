@@ -29,8 +29,9 @@ export function maskPhone(phone) {
 export function formatTimeLabel(time) {
   const [h, m] = String(time || '').split(':').map(Number)
   if (Number.isNaN(h)) return time
+  const period = h < 12 ? '오전' : '오후'
   const h12 = h % 12 === 0 ? 12 : h % 12
-  return m ? `${h12}시${m}분` : `${h12}시`
+  return m ? `${period} ${h12}시${m}분` : `${period} ${h12}시`
 }
 
 export function formatPartyLabel(partySize) {

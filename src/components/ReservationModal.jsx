@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { createReservation, fetchReservationsByDate } from '../lib/api'
 import { toDateKey, formatDateKorean } from '../lib/dates'
+import { formatTimeLabel } from '../lib/mask'
 import { useOtp } from '../lib/useOtp'
 import './ReservationModal.css'
 
@@ -30,6 +31,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
   const [phone, setPhone] = useState('')
   const [otpCode, setOtpCode] = useState('')
   const [pin, setPin] = useState('')
+  const [agreed, setAgreed] = useState(false)
 
   const [submitting, setSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState('')
@@ -55,7 +57,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
   const phoneValid = PHONE_RE.test(phoneDigits)
   const pinValid = /^\d{4,6}$/.test(pin)
   const canSubmit =
-    time && menu && name.trim() && phoneValid && pinValid && otp.verifyToken && !submitting
+    time && menu && name.trim() && phoneValid && pinValid && otp.verifyToken && agreed && !submitting
 
   function changePhone(value) {
     setPhone(value)
@@ -108,7 +110,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
           <div className="modal-success">
             <h3>예약이 완료되었습니다</h3>
             <p className="modal-success-line">
-              {formatDateKorean(date)} {result.time} · {result.partySize}명 · {result.menu}
+              {formatDateKorean(date)} {formatTimeLabel(result.time)} · {result.partySize}명 · {result.menu}
             </p>
             <p className="modal-success-note">
               설정하신 비밀번호로 홈페이지의 &lsquo;예약 확인/변경&rsquo;에서 예약 내역을 확인하거나 변경할 수
@@ -169,7 +171,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
                     <option value="">선택</option>
                     {TIME_SLOTS.map((t) => (
                       <option key={t} value={t}>
-                        {t}
+                        {formatTimeLabel(t)}
                       </option>
                     ))}
                   </select>
@@ -247,6 +249,30 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
                   inputMode="numeric"
                 />
               </label>
+
+              <div className="reservation-notice">
+                <p className="reservation-notice-title">예약 안내</p>
+                <ul>
+                  <li>예약이 완료되면 예약 확인을 위해 매장에서 전화를 드릴 수 있습니다.</li>
+                  <li>예약 시간이 15분 이상 지나도록 연락 없이 도착하지 않으시면 예약이 자동 취소될 수 있습니다.</li>
+                  <li>예약 내용(인원·시간·메뉴) 변경이나 취소는 방문 예정 시간 2시간 전까지 홈페이지 또는 전화로 알려주세요.</li>
+                  <li>10명 이상 단체 예약은 전화로 문의해 주세요.</li>
+                  <li>메뉴는 재료 수급 상황에 따라 사전 안내 없이 변경될 수 있습니다.</li>
+                </ul>
+
+                <p className="reservation-notice-title">개인정보 수집·이용 안내 (필수)</p>
+                <ul>
+                  <li>수집 항목: 이름, 휴대폰번호</li>
+                  <li>수집 목적: 예약 접수·확인, 예약 변경/취소 시 본인 확인, 예약 관련 문자·전화 안내</li>
+                  <li>보유·이용 기간: 예약일로부터 6개월 (관련 법령상 보존 의무가 있는 경우 해당 기간까지)</li>
+                  <li>위 수집·이용에 동의하지 않으실 경우 온라인 예약 서비스 이용이 제한됩니다.</li>
+                </ul>
+
+                <label className="reservation-agree">
+                  <input type="checkbox" checked={agreed} onChange={(e) => setAgreed(e.target.checked)} />
+                  개인정보 수집·이용에 동의합니다 (필수)
+                </label>
+              </div>
 
               {submitError && <p className="form-hint error">{submitError}</p>}
 

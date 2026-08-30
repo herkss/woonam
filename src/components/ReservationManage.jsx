@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { cancelReservation, lookupReservations, updateReservation } from '../lib/api'
 import { useOtp } from '../lib/useOtp'
+import { formatTimeLabel } from '../lib/mask'
 import './ReservationModal.css'
 import './ReservationManage.css'
 
@@ -232,7 +233,7 @@ export default function ReservationManage({ onClose }) {
                         <select value={draft.time} onChange={(e) => setDraft((d) => ({ ...d, time: e.target.value }))}>
                           {TIME_SLOTS.map((t) => (
                             <option key={t} value={t}>
-                              {t}
+                              {formatTimeLabel(t)}
                             </option>
                           ))}
                         </select>
@@ -300,7 +301,7 @@ export default function ReservationManage({ onClose }) {
                 ) : (
                   <>
                     <p className="manage-card-line">
-                      {r.date} {r.time} · {r.partySize}명 · {r.menu}
+                      {r.date} {formatTimeLabel(r.time)} · {r.partySize}명 · {r.menu}
                     </p>
                     <p className="manage-card-sub">{r.name}</p>
 

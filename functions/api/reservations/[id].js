@@ -2,6 +2,7 @@ import { cancelReservation, consumeVerifyToken, getReservationById, updateReserv
 import { hashSecret } from '../../_shared/crypto.js'
 import { sendSms, bookingUpdatedMessage, bookingCancelledMessage, bookingOwnerMessage } from '../../_shared/sms.js'
 import { normalizePhone, isValidDate, isValidTime, errorResponse, jsonResponse } from '../../_shared/validate.js'
+import { formatTimeLabel } from '../../../src/lib/mask.js'
 
 const MAX_PARTY_SIZE = 20
 
@@ -90,7 +91,7 @@ export async function onRequestDelete({ request, env, params }) {
       ? sendSms(
           env,
           env.OWNER_PHONE,
-          `[운암상회 예약취소] ${reservation.date} ${reservation.time} / ${reservation.name} (${phone})`,
+          `[운암상회 예약취소] ${reservation.date} ${formatTimeLabel(reservation.time)} / ${reservation.name} (${phone})`,
         ).catch((e) => console.error(e))
       : Promise.resolve(),
   ])

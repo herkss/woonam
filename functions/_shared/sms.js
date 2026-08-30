@@ -1,4 +1,5 @@
 import { hmacSha256Hex, randomToken } from './crypto.js'
+import { formatTimeLabel } from '../../src/lib/mask.js'
 
 // Solapi 단문 발송 (https://developers.solapi.com)
 // env.SOLAPI_API_KEY / SOLAPI_API_SECRET / SOLAPI_SENDER_NUMBER 가 설정돼야 실제 발송됨.
@@ -44,17 +45,17 @@ export function otpMessage(code) {
 }
 
 export function bookingConfirmedMessage({ date, time, partySize, menu }) {
-  return `[운암상회] 예약이 확정되었습니다.\n${date} ${time} / ${partySize}명 / ${menu}\n문의: 매장 전화`
+  return `[운암상회] 예약이 확정되었습니다.\n${date} ${formatTimeLabel(time)} / ${partySize}명 / ${menu}\n문의: 매장 전화`
 }
 
 export function bookingOwnerMessage({ date, time, partySize, menu, name, phone }) {
-  return `[운암상회 예약알림] ${date} ${time} / ${partySize}명 / ${menu}\n예약자: ${name} (${phone})`
+  return `[운암상회 예약알림] ${date} ${formatTimeLabel(time)} / ${partySize}명 / ${menu}\n예약자: ${name} (${phone})`
 }
 
 export function bookingUpdatedMessage({ date, time, partySize, menu }) {
-  return `[운암상회] 예약이 변경되었습니다.\n${date} ${time} / ${partySize}명 / ${menu}`
+  return `[운암상회] 예약이 변경되었습니다.\n${date} ${formatTimeLabel(time)} / ${partySize}명 / ${menu}`
 }
 
 export function bookingCancelledMessage({ date, time }) {
-  return `[운암상회] 예약이 취소되었습니다. (${date} ${time})`
+  return `[운암상회] 예약이 취소되었습니다. (${date} ${formatTimeLabel(time)})`
 }
