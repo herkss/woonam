@@ -9,7 +9,7 @@ const DISHES = [
   { name: '매운탕', price: '29,000원', image: maeuntangImg },
 ]
 
-export default function TodayPick() {
+export default function TodayPick({ onSelectDate }) {
   return (
     <section className="today-pick" id="menu">
       <div className="section-grid">
@@ -32,8 +32,8 @@ export default function TodayPick() {
 
         <div className="reserve-col" id="reservation">
           <h2 className="section-title">예약 현황</h2>
-          <p className="section-sub">운암상회에서 만나는 최고의 미식 경험을 예약해보세요.</p>
-          <Calendar busyDates={[12, 13, 14, 15, 16]} />
+          <p className="section-sub">날짜를 클릭하면 예약 팝업이 열립니다.</p>
+          <Calendar busyDates={[12, 13, 14, 15, 16]} onSelectDate={onSelectDate} />
         </div>
       </div>
     </section>

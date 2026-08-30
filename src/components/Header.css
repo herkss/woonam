@@ -23,6 +23,15 @@
   opacity: 0.9;
 }
 
+.topbar-manage {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: inherit;
+  font-family: inherit;
+  padding: 0;
+}
+
 .topbar-link:hover {
   opacity: 1;
   text-decoration: underline;

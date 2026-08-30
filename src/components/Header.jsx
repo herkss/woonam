@@ -37,7 +37,7 @@ function SocialIcons({ className = '' }) {
   )
 }
 
-export default function Header() {
+export default function Header({ onOpenManage }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -47,6 +47,9 @@ export default function Header() {
           <a href="#waitlist" className="topbar-link">
             웨이팅걸기
           </a>
+          <button type="button" className="topbar-link topbar-manage" onClick={onOpenManage}>
+            예약 확인/변경
+          </button>
           <SocialIcons />
         </div>
       </div>

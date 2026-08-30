@@ -42,8 +42,29 @@ React(Vite)로 만든 식당 홈페이지. 참고 디자인은 사용자가 제�
 - **공지사항 내용**: Notices 섹션 텍스트도 예시로 작성된 상태
 
 ### 3. 기능적으로 비어있는 부분
-- 예약 시스템: 달력과 "온라인 예약하기" 버튼은 UI만 존재, 실제 예약 처리 로직/백엔드 없음
 - 소개/메뉴/갤러리/오시는길 네비게이션은 전부 같은 페이지 내 앵커(`#about`, `#menu` 등)로만 연결됨 — 별도 페이지로 분리할지 결정 필요
+
+### 4. 예약 시스템 (구현 완료, 배포 전 설정 필요)
+
+달력 날짜 클릭 → 팝업(인원/시간/메뉴/이름/전화번호 입력 → 문자 인증 → 예약하기)까지 전체 흐름을 구현함.
+헤더의 "예약 확인/변경"에서 비밀번호 또는 문자 인증으로 본인 확인 후 예약 수정/취소 가능.
+
+- 프론트엔드: `src/components/ReservationModal.jsx`(신규 예약), `ReservationManage.jsx`(확인/변경), `src/lib/mask.js`(이름/전화번호 마스킹 — "김x자,010-2xx7-23x7,7명,5시" 형식), `src/lib/useOtp.js`, `src/lib/api.js`
+- 백엔드: Cloudflare Pages Functions (`functions/api/**`) + D1 데이터베이스 (`migrations/0001_init.sql`)
+- 문자 발송: Solapi API 사용 (`functions/_shared/sms.js`). **API 키를 아직 등록 안 한 상태에서도 정상 동작** — 키가 없으면 실제 발송 대신 콘솔 로그로만 남기는 개발용 폴백이 들어있음
+- 로컬에서 `npm run build && npm run pages:dev` (내부적으로 `wrangler pages dev dist` 실행)로 API까지 포함해 전체 흐름 테스트 가능. `npm run d1:migrate:local`로 로컬 D1에 스키마 적용.
+- curl로 OTP 요청/검증/예약생성/단일사용토큰/마스킹목록/PIN조회/수정/취소 전 구간 테스트 완료함 (2026-08-30)
+
+**실제 배포 전 해야 할 일**:
+1. `npx wrangler d1 create woonam-reservations` 실행 후 나온 `database_id`를 `wrangler.toml`의 `YOUR_D1_DATABASE_ID`에 채워넣기
+2. `npm run d1:migrate:remote`로 운영 D1에 스키마 적용
+3. Cloudflare Pages 대시보드 → 프로젝트 설정 → 환경 변수(Secrets)에 아래 값 등록 (`.dev.vars.example` 참고):
+   - `SOLAPI_API_KEY`, `SOLAPI_API_SECRET` — Solapi 콘솔에서 발급. **API 키 생성 시 CIDR 대신 "모든 IP 허용" 선택** (Cloudflare Pages Functions는 고정 발신 IP가 없어서 IP 제한이 안 맞음)
+   - `SOLAPI_SENDER_NUMBER` — Solapi에 사전 등록된 발신번호
+   - `OWNER_PHONE` — 점주가 예약 알림을 받을 번호
+   - `TOKEN_SECRET` — 임의의 긴 랜덤 문자열 (OTP 해시/토큰 서명용)
+4. Cloudflare Pages는 이제 `dist` 폴더 업로드만으로는 API가 동작하지 않음 — Git 연동 배포(빌드 명령 `npm run build`, 출력 디렉토리 `dist`)로 전환하거나, `npx wrangler pages deploy dist`로 배포해야 `functions/` 폴더가 함께 배포됨
+5. (나중에) 카카오 알림톡: 비즈니스 채널 개설 + 템플릿 사전승인 완료되면 `functions/_shared/sms.js`에 알림톡 발송 분기 추가 예정
 
 ## 배포 방법 (재확인용)
 

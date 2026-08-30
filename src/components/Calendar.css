@@ -54,6 +54,15 @@
   padding: 6px 0;
   font-size: 0.85rem;
   border-radius: 6px;
+  background: none;
+  border: none;
+  font-family: inherit;
+  color: inherit;
+  cursor: default;
+}
+
+.cal-cell.empty {
+  visibility: hidden;
 }
 
 .cal-cell.sun {
@@ -67,6 +76,19 @@
 .cal-cell.busy {
   background: var(--cream-2);
   color: var(--text-muted);
+}
+
+.cal-cell.past {
+  color: var(--border);
+}
+
+.cal-cell.clickable {
+  cursor: pointer;
+}
+
+.cal-cell.clickable:hover {
+  background: var(--gold);
+  color: var(--white);
 }
 
 .cal-cell.today {

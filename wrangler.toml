@@ -1,0 +1,20 @@
+name = "woonam"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-08-01"
+
+# D1 데이터베이스 바인딩
+# 1) `npx wrangler d1 create woonam-reservations` 실행 후 출력된 database_id를 아래에 붙여넣으세요.
+# 2) 로컬 개발: `npx wrangler d1 execute woonam-reservations --local --file=./migrations/0001_init.sql`
+# 3) 배포 후 1회: `npx wrangler d1 execute woonam-reservations --remote --file=./migrations/0001_init.sql`
+[[d1_databases]]
+binding = "DB"
+database_name = "woonam-reservations"
+database_id = "YOUR_D1_DATABASE_ID"
+
+# 아래 값들은 커밋하지 말고 Cloudflare Pages 대시보드(설정 > 환경 변수/보안 변수) 또는
+# `npx wrangler pages secret put <이름>` 으로 등록하세요. 로컬 개발용은 .dev.vars 참고.
+# - SOLAPI_API_KEY
+# - SOLAPI_API_SECRET
+# - SOLAPI_SENDER_NUMBER   (Solapi에 등록된 발신번호, 예: 0212345678)
+# - OWNER_PHONE            (점주 알림 수신 번호, 예: 01012345678)
+# - TOKEN_SECRET           (OTP 해시/토큰 서명용 임의의 긴 문자열)

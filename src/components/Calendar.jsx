@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { isPastDay } from '../lib/dates'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -14,7 +15,7 @@ function buildMonthGrid(year, month) {
   return cells
 }
 
-export default function Calendar({ busyDates = [], initialDate = new Date() }) {
+export default function Calendar({ busyDates = [], initialDate = new Date(), onSelectDate }) {
   const [cursor, setCursor] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
   )
@@ -55,21 +56,30 @@ export default function Calendar({ busyDates = [], initialDate = new Date() }) {
         {cells.map((d, i) => {
           const col = i % 7
           const busy = d && busyDates.includes(d)
+          const cellDate = d ? new Date(year, month, d) : null
+          const past = cellDate ? isPastDay(cellDate, today) : false
+          const clickable = d && !past && onSelectDate
+
           return (
-            <span
+            <button
+              type="button"
               key={i}
+              disabled={!clickable}
+              onClick={clickable ? () => onSelectDate(cellDate) : undefined}
               className={[
                 'cal-cell',
                 d ? '' : 'empty',
                 col === 0 ? 'sun' : col === 6 ? 'sat' : '',
                 isToday(d) ? 'today' : '',
                 busy ? 'busy' : '',
+                past ? 'past' : '',
+                clickable ? 'clickable' : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
             >
               {d || ''}
-            </span>
+            </button>
           )
         })}
       </div>

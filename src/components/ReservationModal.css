@@ -1,0 +1,161 @@
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 42, 63, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.modal-panel {
+  position: relative;
+  background: var(--white);
+  border-radius: 10px;
+  padding: 28px 24px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--text-muted);
+}
+
+.modal-title {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.modal-existing {
+  background: var(--cream);
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+}
+
+.modal-existing-label {
+  margin: 0 0 6px;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.modal-existing-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.modal-existing-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.85rem;
+}
+
+.modal-existing-list li {
+  padding: 2px 0;
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.modal-form input,
+.modal-form select {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-inline {
+  display: flex;
+  gap: 8px;
+}
+
+.form-inline input {
+  flex: 1;
+}
+
+.form-inline .btn {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.form-hint {
+  margin: -4px 0 0;
+  font-size: 0.8rem;
+}
+
+.form-hint.success {
+  color: #2f7a4f;
+}
+
+.form-hint.error {
+  color: #c0442c;
+}
+
+.btn-primary {
+  background: var(--navy);
+  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 12px;
+  font-weight: 700;
+}
+
+.btn-primary:disabled {
+  background: var(--border);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.modal-success {
+  text-align: center;
+  padding: 12px 0 4px;
+}
+
+.modal-success h3 {
+  margin: 0 0 10px;
+}
+
+.modal-success-line {
+  font-weight: 700;
+  color: var(--navy);
+  margin: 0 0 10px;
+}
+
+.modal-success-note {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 20px;
+}

@@ -1,0 +1,64 @@
+.manage-panel {
+  max-width: 460px;
+}
+
+.manage-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.manage-tabs button {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+  color: var(--text-muted);
+  font-size: 0.82rem;
+}
+
+.manage-tabs button.active {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+}
+
+.manage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.manage-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.manage-card-line {
+  margin: 0;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.manage-card-sub {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.manage-card-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.manage-otp-confirm {
+  background: var(--cream);
+  border-radius: 6px;
+  padding: 10px;
+}
