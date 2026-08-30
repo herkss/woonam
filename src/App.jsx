@@ -21,7 +21,16 @@ function App() {
       </main>
       <Footer />
 
-      {bookingDate && <ReservationModal date={bookingDate} onClose={() => setBookingDate(null)} />}
+      {bookingDate && (
+        <ReservationModal
+          date={bookingDate}
+          onClose={() => setBookingDate(null)}
+          onOpenManage={() => {
+            setBookingDate(null)
+            setManageOpen(true)
+          }}
+        />
+      )}
       {manageOpen && <ReservationManage onClose={() => setManageOpen(false)} />}
     </>
   )

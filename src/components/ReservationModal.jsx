@@ -15,10 +15,11 @@ const MENU_OPTIONS = ['향어회', '매운탕', '기타(전화 문의)']
 
 const PHONE_RE = /^01[016789]\d{7,8}$/
 
-export default function ReservationModal({ date, onClose }) {
+export default function ReservationModal({ date, onClose, onOpenManage }) {
   const dateKey = toDateKey(date)
   const otp = useOtp('booking')
 
+  const [tab, setTab] = useState('new') // 'new' | 'edit'
   const [existing, setExisting] = useState([])
   const [loadingList, setLoadingList] = useState(true)
 
@@ -119,23 +120,36 @@ export default function ReservationModal({ date, onClose }) {
           </div>
         ) : (
           <>
-            <h3 className="modal-title">{formatDateKorean(date)} 예약</h3>
+            <h3 className="modal-title">{formatDateKorean(date)}</h3>
 
-            <div className="modal-existing">
-              <p className="modal-existing-label">이 날짜의 예약 현황</p>
-              {loadingList ? (
-                <p className="modal-existing-empty">불러오는 중...</p>
-              ) : existing.length === 0 ? (
-                <p className="modal-existing-empty">아직 예약이 없습니다</p>
-              ) : (
-                <ul className="modal-existing-list">
-                  {existing.map((r, i) => (
-                    <li key={i}>{r.line}</li>
-                  ))}
-                </ul>
-              )}
+            <div className="reservation-tabs">
+              <button type="button" className={tab === 'new' ? 'active' : ''} onClick={() => setTab('new')}>
+                예약
+              </button>
+              <button type="button" className={tab === 'edit' ? 'active' : ''} onClick={() => setTab('edit')}>
+                수정
+              </button>
             </div>
 
+            {tab === 'edit' ? (
+              <div className="modal-existing">
+                <p className="modal-existing-label">이 날짜의 예약 현황</p>
+                {loadingList ? (
+                  <p className="modal-existing-empty">불러오는 중...</p>
+                ) : existing.length === 0 ? (
+                  <p className="modal-existing-empty">아직 예약이 없습니다</p>
+                ) : (
+                  <ul className="modal-existing-list">
+                    {existing.map((r, i) => (
+                      <li key={i}>{r.line}</li>
+                    ))}
+                  </ul>
+                )}
+                <button type="button" className="btn btn-primary btn-full" onClick={onOpenManage}>
+                  나의 예약 확인/수정
+                </button>
+              </div>
+            ) : (
             <form className="modal-form" onSubmit={handleSubmit}>
               <div className="form-row">
                 <label>
@@ -240,6 +254,7 @@ export default function ReservationModal({ date, onClose }) {
                 {submitting ? '예약 중...' : '예약하기'}
               </button>
             </form>
+            )}
           </>
         )}
       </div>
