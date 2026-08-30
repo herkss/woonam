@@ -127,17 +127,16 @@
 
 .form-inline {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  justify-content: flex-end;
 }
 
 .form-inline input {
-  flex: 1;
-  min-width: 0;
+  width: 100%;
 }
 
 .form-inline .btn {
-  flex-shrink: 0;
+  width: 100%;
   white-space: nowrap;
   padding: 9px 12px;
   font-size: 0.82rem;
