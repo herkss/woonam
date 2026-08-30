@@ -43,26 +43,33 @@ export default function NaverMap({ address }) {
 
     loadNaverMapsScript(NAVER_MAP_CLIENT_ID)
       .then((naver) => {
-        if (cancelled || !mapRef.current) return
-
-        const map = new naver.maps.Map(mapRef.current, {
-          center: new naver.maps.LatLng(
-            JEONJU_FALLBACK_CENTER.lat,
-            JEONJU_FALLBACK_CENTER.lng,
-          ),
-          zoom: 16,
-        })
+        if (cancelled) return
 
         naver.maps.Service.geocode({ query: address }, (geoStatus, response) => {
-          if (geoStatus !== naver.maps.Service.Status.OK) return
-          const result = response.v2.addresses[0]
-          if (!result) return
-          const point = new naver.maps.LatLng(result.y, result.x)
-          map.setCenter(point)
-          new naver.maps.Marker({ position: point, map })
-        })
+          if (cancelled || !mapRef.current) return
 
-        setStatus('ready')
+          const result =
+            geoStatus === naver.maps.Service.Status.OK
+              ? response.v2.addresses[0]
+              : null
+          if (!result) {
+            console.error('NaverMap geocode failed', geoStatus, response)
+          }
+
+          const center = result
+            ? new naver.maps.LatLng(result.y, result.x)
+            : new naver.maps.LatLng(
+                JEONJU_FALLBACK_CENTER.lat,
+                JEONJU_FALLBACK_CENTER.lng,
+              )
+
+          const map = new naver.maps.Map(mapRef.current, { center, zoom: 16 })
+          if (result) {
+            new naver.maps.Marker({ position: center, map })
+          }
+
+          setStatus('ready')
+        })
       })
       .catch(() => setStatus('error'))
 
@@ -71,7 +78,7 @@ export default function NaverMap({ address }) {
     }
   }, [address])
 
-  if (status !== 'ready') {
+  if (status === 'missing-key' || status === 'error') {
     return (
       <div className="map-frame map-fallback">
         <svg viewBox="0 0 100 100" width="28" height="28">
