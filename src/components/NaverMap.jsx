@@ -87,7 +87,15 @@ export default function NaverMap({ address }) {
             center: point,
             zoom: 16,
           })
-          new naver.maps.Marker({ position: point, map: freshMap })
+          const marker = new naver.maps.Marker({ position: point, map: freshMap })
+          new naver.maps.InfoWindow({
+            content:
+              '<div style="padding:4px 10px;font-size:12px;font-weight:700;color:#172a3f;white-space:nowrap;text-align:center;">대아리 운암상회<br/><span style="font-size:11px;font-weight:500;">010-9794-4020</span></div>',
+            disableAnchor: true,
+            borderWidth: 0,
+            backgroundColor: 'transparent',
+            pixelOffset: new naver.maps.Point(0, -8),
+          }).open(freshMap, marker)
         })
       })
       .catch(() => setStatus('error'))
