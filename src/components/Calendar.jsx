@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react'
-import { isPastDay } from '../lib/dates'
+import { useEffect, useMemo, useState } from 'react'
+import { isPastDay, toDateKey, toMonthKey } from '../lib/dates'
+import { fetchReservedDatesInMonth } from '../lib/api'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -15,16 +16,29 @@ function buildMonthGrid(year, month) {
   return cells
 }
 
-export default function Calendar({ busyDates = [], initialDate = new Date(), onSelectDate }) {
+export default function Calendar({ initialDate = new Date(), onSelectDate }) {
   const [cursor, setCursor] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
   )
+  const [reservedDates, setReservedDates] = useState(new Set())
 
   const year = cursor.getFullYear()
   const month = cursor.getMonth()
   const today = initialDate
 
   const cells = useMemo(() => buildMonthGrid(year, month), [year, month])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchReservedDatesInMonth(toMonthKey(year, month))
+      .then((res) => {
+        if (!cancelled) setReservedDates(new Set(res.dates))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [year, month])
 
   const isToday = (d) =>
     d === today.getDate() && month === today.getMonth() && year === today.getFullYear()
@@ -55,10 +69,10 @@ export default function Calendar({ busyDates = [], initialDate = new Date(), onS
       <div className="calendar-grid">
         {cells.map((d, i) => {
           const col = i % 7
-          const busy = d && busyDates.includes(d)
           const cellDate = d ? new Date(year, month, d) : null
           const past = cellDate ? isPastDay(cellDate, today) : false
           const clickable = d && !past && onSelectDate
+          const hasReservation = cellDate && reservedDates.has(toDateKey(cellDate))
 
           return (
             <button
@@ -71,14 +85,14 @@ export default function Calendar({ busyDates = [], initialDate = new Date(), onS
                 d ? '' : 'empty',
                 col === 0 ? 'sun' : col === 6 ? 'sat' : '',
                 isToday(d) ? 'today' : '',
-                busy ? 'busy' : '',
                 past ? 'past' : '',
                 clickable ? 'clickable' : '',
               ]
                 .filter(Boolean)
                 .join(' ')}
             >
-              {d || ''}
+              <span className="cal-day-num">{d || ''}</span>
+              <span className={`cal-dot ${hasReservation ? '' : 'hidden'}`} aria-label={hasReservation ? '예약 있음' : undefined} />
             </button>
           )
         })}

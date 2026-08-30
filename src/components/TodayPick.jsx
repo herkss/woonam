@@ -33,7 +33,7 @@ export default function TodayPick({ onSelectDate }) {
         <div className="reserve-col" id="reservation">
           <h2 className="section-title">예약 현황</h2>
           <p className="section-sub">날짜를 클릭하면 예약 팝업이 열립니다.</p>
-          <Calendar busyDates={[12, 13, 14, 15, 16]} onSelectDate={onSelectDate} />
+          <Calendar onSelectDate={onSelectDate} />
         </div>
       </div>
     </section>

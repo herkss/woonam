@@ -66,6 +66,15 @@ export async function getReservationsByDate(env, date) {
   return results
 }
 
+export async function getReservedDatesInMonth(env, monthPrefix) {
+  const { results } = await env.DB.prepare(
+    `SELECT DISTINCT date FROM reservations WHERE date LIKE ?1 AND status = 'confirmed' ORDER BY date ASC`,
+  )
+    .bind(`${monthPrefix}-%`)
+    .all()
+  return results.map((r) => r.date)
+}
+
 export async function getReservationsByPhone(env, phone) {
   const { results } = await env.DB.prepare(
     `SELECT * FROM reservations WHERE phone = ?1 AND status = 'confirmed' ORDER BY date ASC, time ASC`,

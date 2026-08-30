@@ -23,6 +23,10 @@ export function fetchReservationsByDate(date) {
   return request(`/reservations?date=${encodeURIComponent(date)}`)
 }
 
+export function fetchReservedDatesInMonth(monthKey) {
+  return request(`/reservations?month=${encodeURIComponent(monthKey)}`)
+}
+
 export function createReservation(payload) {
   return request('/reservations', { method: 'POST', body: payload })
 }

@@ -10,6 +10,10 @@ export function isValidDate(dateStr) {
   return /^\d{4}-\d{2}-\d{2}$/.test(String(dateStr || ''))
 }
 
+export function isValidMonth(monthStr) {
+  return /^\d{4}-\d{2}$/.test(String(monthStr || ''))
+}
+
 export function isValidTime(timeStr) {
   return /^([01]\d|2[0-3]):[0-5]\d$/.test(String(timeStr || ''))
 }

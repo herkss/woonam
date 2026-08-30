@@ -51,6 +51,11 @@
 }
 
 .cal-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
   padding: 6px 0;
   font-size: 0.85rem;
   border-radius: 6px;
@@ -65,17 +70,27 @@
   visibility: hidden;
 }
 
+.cal-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #d33;
+}
+
+.cal-dot.hidden {
+  background: transparent;
+}
+
+.cal-cell.today .cal-dot {
+  background: var(--white);
+}
+
 .cal-cell.sun {
   color: #c0442c;
 }
 
 .cal-cell.sat {
   color: var(--navy);
-}
-
-.cal-cell.busy {
-  background: var(--cream-2);
-  color: var(--text-muted);
 }
 
 .cal-cell.past {

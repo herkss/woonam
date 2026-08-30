@@ -5,6 +5,10 @@ export function toDateKey(date) {
   return `${y}-${m}-${d}`
 }
 
+export function toMonthKey(year, month0) {
+  return `${year}-${String(month0 + 1).padStart(2, '0')}`
+}
+
 export function isPastDay(date, today = new Date()) {
   const a = new Date(date.getFullYear(), date.getMonth(), date.getDate())
   const b = new Date(today.getFullYear(), today.getMonth(), today.getDate())
