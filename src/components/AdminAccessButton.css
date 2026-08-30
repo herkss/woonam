@@ -3,11 +3,12 @@
 }
 
 .admin-access-btn {
-  background: none;
+  background: var(--white);
   border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 4px 10px;
+  border-radius: 6px;
+  padding: 5px 10px;
   font-size: 0.7rem;
+  font-weight: 600;
   color: var(--text-muted);
   white-space: nowrap;
 }

@@ -50,7 +50,7 @@ export default function Calendar({ initialDate = new Date(), onSelectDate, onAdm
   return (
     <div className="calendar">
       <div className="calendar-header">
-        <button type="button" aria-label="이전 달" onClick={goPrev}>
+        <button type="button" className="calendar-nav-btn" aria-label="이전 달" onClick={goPrev}>
           &#8249;
         </button>
         <span className="calendar-header-title">
@@ -59,7 +59,7 @@ export default function Calendar({ initialDate = new Date(), onSelectDate, onAdm
           </span>
           <AdminAccessButton admin={admin} />
         </span>
-        <button type="button" aria-label="다음 달" onClick={goNext}>
+        <button type="button" className="calendar-nav-btn" aria-label="다음 달" onClick={goNext}>
           &#8250;
         </button>
       </div>
