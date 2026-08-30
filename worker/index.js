@@ -8,6 +8,9 @@ import * as otpVerify from '../functions/api/otp/verify.js'
 import * as reservations from '../functions/api/reservations/index.js'
 import * as reservationLookup from '../functions/api/reservations/lookup.js'
 import * as reservationById from '../functions/api/reservations/[id].js'
+import * as adminLogin from '../functions/api/admin/login.js'
+import * as adminChangePassword from '../functions/api/admin/change-password.js'
+import * as adminReservations from '../functions/api/admin/reservations.js'
 import { errorResponse } from '../functions/_shared/validate.js'
 
 export default {
@@ -38,6 +41,16 @@ export default {
         const params = { id: idMatch[1] }
         if (method === 'PATCH') return await reservationById.onRequestPatch({ request, env, params })
         if (method === 'DELETE') return await reservationById.onRequestDelete({ request, env, params })
+      }
+
+      if (pathname === '/api/admin/login' && method === 'POST') {
+        return await adminLogin.onRequestPost({ request, env })
+      }
+      if (pathname === '/api/admin/change-password' && method === 'POST') {
+        return await adminChangePassword.onRequestPost({ request, env })
+      }
+      if (pathname === '/api/admin/reservations' && method === 'GET') {
+        return await adminReservations.onRequestGet({ request, env })
       }
     } catch (err) {
       console.error(err)

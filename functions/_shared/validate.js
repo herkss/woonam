@@ -26,6 +26,12 @@ export function isValidOtpCode(code) {
   return /^\d{6}$/.test(String(code || ''))
 }
 
+// 한국 시간(KST) 기준 오늘 날짜 (YYYY-MM-DD)
+export function todayKstDateKey() {
+  const kst = new Date(Date.now() + 9 * 60 * 60 * 1000)
+  return kst.toISOString().slice(0, 10)
+}
+
 export function jsonResponse(body, init = {}) {
   return new Response(JSON.stringify(body), {
     ...init,

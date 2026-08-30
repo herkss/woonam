@@ -75,6 +75,28 @@ export async function getReservedDatesInMonth(env, monthPrefix) {
   return results.map((r) => r.date)
 }
 
+// 관리자(점주)용: 상태(취소 포함) 무관하게 해당 날짜의 모든 예약을 반환
+export async function getAllReservationsByDate(env, date) {
+  const { results } = await env.DB.prepare(`SELECT * FROM reservations WHERE date = ?1 ORDER BY time ASC`)
+    .bind(date)
+    .all()
+  return results
+}
+
+export async function getAdminConfig(env, key) {
+  const row = await env.DB.prepare(`SELECT value FROM admin_config WHERE key = ?1`).bind(key).first()
+  return row ? row.value : null
+}
+
+export async function setAdminConfig(env, key, value) {
+  await env.DB.prepare(
+    `INSERT INTO admin_config (key, value) VALUES (?1, ?2)
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value`,
+  )
+    .bind(key, value)
+    .run()
+}
+
 export async function getReservationsByPhone(env, phone) {
   const { results } = await env.DB.prepare(
     `SELECT * FROM reservations WHERE phone = ?1 AND status = 'confirmed' ORDER BY date ASC, time ASC`,

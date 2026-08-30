@@ -1,0 +1,76 @@
+.admin-access {
+  position: relative;
+}
+
+.admin-access-btn {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.admin-access-btn:hover {
+  background: var(--cream);
+}
+
+.admin-access-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 20;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  width: 220px;
+  box-shadow: 0 12px 24px -8px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.admin-access-popover form,
+.admin-access-popover > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-access-popover input {
+  font-family: inherit;
+  font-size: 0.85rem;
+  padding: 8px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.admin-access-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.admin-access-hint {
+  margin: 0;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.admin-access-error {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #c0442c;
+}
+
+.admin-access-success {
+  margin: 0;
+  font-size: 0.76rem;
+  color: #2f7a4f;
+}
+
+.admin-access-popover .btn {
+  padding: 8px;
+  font-size: 0.82rem;
+}

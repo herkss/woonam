@@ -14,6 +14,12 @@
   margin-bottom: 12px;
 }
 
+.calendar-header-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .calendar-header button {
   background: none;
   border: 1px solid var(--border);
@@ -79,6 +85,10 @@
 
 .cal-dot.hidden {
   background: transparent;
+}
+
+.cal-dot.muted {
+  background: #9a9a9a;
 }
 
 .cal-cell.today .cal-dot {

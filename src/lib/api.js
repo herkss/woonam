@@ -1,7 +1,7 @@
 async function request(path, options) {
   const res = await fetch(`/api${path}`, {
     method: options?.method || 'GET',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', ...(options?.headers || {}) },
     body: options?.body ? JSON.stringify(options.body) : undefined,
   })
   const data = await res.json().catch(() => ({}))
@@ -41,4 +41,18 @@ export function updateReservation(id, payload) {
 
 export function cancelReservation(id, payload) {
   return request(`/reservations/${id}`, { method: 'DELETE', body: payload })
+}
+
+export function adminLogin(password) {
+  return request('/admin/login', { method: 'POST', body: { password } })
+}
+
+export function adminChangePassword(payload) {
+  return request('/admin/change-password', { method: 'POST', body: payload })
+}
+
+export function fetchAdminReservations(date, adminToken) {
+  return request(`/admin/reservations?date=${encodeURIComponent(date)}`, {
+    headers: { 'x-admin-token': adminToken },
+  })
 }

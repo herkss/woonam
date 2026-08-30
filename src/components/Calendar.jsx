@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { isPastDay, toDateKey, toMonthKey } from '../lib/dates'
 import { fetchReservedDatesInMonth } from '../lib/api'
+import AdminAccessButton from './AdminAccessButton'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -16,7 +17,7 @@ function buildMonthGrid(year, month) {
   return cells
 }
 
-export default function Calendar({ initialDate = new Date(), onSelectDate }) {
+export default function Calendar({ initialDate = new Date(), onSelectDate, onAdminSelectDate, admin }) {
   const [cursor, setCursor] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
   )
@@ -52,8 +53,11 @@ export default function Calendar({ initialDate = new Date(), onSelectDate }) {
         <button type="button" aria-label="이전 달" onClick={goPrev}>
           &#8249;
         </button>
-        <span>
-          {year}년 {month + 1}월
+        <span className="calendar-header-title">
+          <span>
+            {year}년 {month + 1}월
+          </span>
+          <AdminAccessButton admin={admin} />
         </span>
         <button type="button" aria-label="다음 달" onClick={goNext}>
           &#8250;
@@ -71,15 +75,20 @@ export default function Calendar({ initialDate = new Date(), onSelectDate }) {
           const col = i % 7
           const cellDate = d ? new Date(year, month, d) : null
           const past = cellDate ? isPastDay(cellDate, today) : false
-          const clickable = d && !past && onSelectDate
+          const clickable = d && (admin.isAdmin ? onAdminSelectDate : !past && onSelectDate)
           const hasReservation = cellDate && reservedDates.has(toDateKey(cellDate))
+
+          const handleClick = () => {
+            if (admin.isAdmin) onAdminSelectDate(cellDate)
+            else onSelectDate(cellDate)
+          }
 
           return (
             <button
               type="button"
               key={i}
               disabled={!clickable}
-              onClick={clickable ? () => onSelectDate(cellDate) : undefined}
+              onClick={clickable ? handleClick : undefined}
               className={[
                 'cal-cell',
                 d ? '' : 'empty',
@@ -92,7 +101,12 @@ export default function Calendar({ initialDate = new Date(), onSelectDate }) {
                 .join(' ')}
             >
               <span className="cal-day-num">{d || ''}</span>
-              <span className={`cal-dot ${hasReservation ? '' : 'hidden'}`} aria-label={hasReservation ? '예약 있음' : undefined} />
+              <span
+                className={['cal-dot', hasReservation ? '' : 'hidden', past ? 'muted' : '']
+                  .filter(Boolean)
+                  .join(' ')}
+                aria-label={hasReservation ? '예약 있음' : undefined}
+              />
             </button>
           )
         })}

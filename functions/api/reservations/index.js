@@ -8,6 +8,7 @@ import {
   isValidMonth,
   isValidTime,
   isValidPin,
+  todayKstDateKey,
   errorResponse,
   jsonResponse,
 } from '../../_shared/validate.js'
@@ -26,6 +27,9 @@ export async function onRequestGet({ request, env }) {
 
   const date = url.searchParams.get('date')
   if (!isValidDate(date)) return errorResponse('date 파라미터가 필요합니다 (YYYY-MM-DD)')
+
+  // 지난 날짜의 예약 상세는 점주만 확인 가능 (functions/api/admin/reservations.js)
+  if (date < todayKstDateKey()) return jsonResponse({ ok: true, date, reservations: [] })
 
   const rows = await getReservationsByDate(env, date)
   const reservations = rows.map((r) => ({

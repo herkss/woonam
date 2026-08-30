@@ -1,0 +1,48 @@
+.admin-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.admin-day-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.admin-day-card.status-cancelled {
+  opacity: 0.55;
+}
+
+.admin-day-card-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.admin-day-time {
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.admin-day-status {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+}
+
+.admin-day-name {
+  margin: 0 0 6px;
+  font-size: 0.9rem;
+}
+
+.admin-day-phone {
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--navy);
+  text-decoration: underline;
+}
