@@ -9,7 +9,7 @@ compatibility_date = "2026-08-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "woonam-reservations"
-database_id = "YOUR_D1_DATABASE_ID"
+database_id = "34704691-0cff-44a9-88b6-01fb5878ded3"
 
 # 아래 값들은 커밋하지 말고 Cloudflare Pages 대시보드(설정 > 환경 변수/보안 변수) 또는
 # `npx wrangler pages secret put <이름>` 으로 등록하세요. 로컬 개발용은 .dev.vars 참고.
