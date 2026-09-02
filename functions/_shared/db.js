@@ -188,3 +188,26 @@ export async function updateNotice(env, id, { title, content }) {
 export async function deleteNotice(env, id) {
   await env.DB.prepare(`DELETE FROM notices WHERE id = ?1`).bind(id).run()
 }
+
+export async function listGalleryImages(env) {
+  const { results } = await env.DB.prepare(
+    `SELECT * FROM gallery_images ORDER BY sort_order ASC, id DESC`,
+  ).all()
+  return results
+}
+
+export async function getGalleryImage(env, id) {
+  return env.DB.prepare(`SELECT * FROM gallery_images WHERE id = ?1`).bind(id).first()
+}
+
+export async function createGalleryImage(env, { imageUrl, caption, sortOrder }) {
+  return env.DB.prepare(
+    `INSERT INTO gallery_images (image_url, caption, sort_order) VALUES (?1, ?2, ?3) RETURNING *`,
+  )
+    .bind(imageUrl, caption, sortOrder)
+    .first()
+}
+
+export async function deleteGalleryImage(env, id) {
+  await env.DB.prepare(`DELETE FROM gallery_images WHERE id = ?1`).bind(id).run()
+}

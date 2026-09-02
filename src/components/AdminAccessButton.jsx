@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './AdminAccessButton.css'
 
-export default function AdminAccessButton({ admin, onOpenMenuManage, onOpenNoticeManage }) {
+export default function AdminAccessButton({ admin, onOpenMenuManage, onOpenNoticeManage, onOpenGalleryManage }) {
   const [open, setOpen] = useState(false) // 로그인 전: 비밀번호 입력 박스 / 로그인 후: 메뉴
   const [mode, setMode] = useState('login') // 'login' | 'menu' | 'change'
 
@@ -113,6 +113,16 @@ export default function AdminAccessButton({ admin, onOpenMenuManage, onOpenNotic
                 }}
               >
                 공지사항 관리
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-sm"
+                onClick={() => {
+                  setOpen(false)
+                  onOpenGalleryManage?.()
+                }}
+              >
+                갤러리 관리
               </button>
               <button type="button" className="btn btn-outline-sm" onClick={() => setMode('change')}>
                 비밀번호 변경

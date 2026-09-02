@@ -38,7 +38,7 @@ function SocialIcons({ className = '' }) {
   )
 }
 
-export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNoticeManage }) {
+export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNoticeManage, onOpenGalleryManage }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -56,6 +56,7 @@ export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNo
             admin={admin}
             onOpenMenuManage={onOpenMenuManage}
             onOpenNoticeManage={onOpenNoticeManage}
+            onOpenGalleryManage={onOpenGalleryManage}
           />
         </div>
       </div>

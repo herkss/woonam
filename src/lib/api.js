@@ -96,3 +96,15 @@ export function updateNotice(id, payload, adminToken) {
 export function deleteNotice(id, adminToken) {
   return request(`/notices/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
 }
+
+export function fetchGalleryImages() {
+  return request('/gallery')
+}
+
+export function createGalleryImage(payload, adminToken) {
+  return request('/gallery', { method: 'POST', body: payload, headers: { 'x-admin-token': adminToken } })
+}
+
+export function deleteGalleryImage(id, adminToken) {
+  return request(`/gallery/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
+}

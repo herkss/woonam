@@ -26,7 +26,7 @@ export default function Notices({ admin, onOpenNoticeManage, noticeVersion }) {
   }, [noticeVersion])
 
   return (
-    <section className="notices" id="gallery">
+    <section className="notices" id="notices">
       <div className="section-grid">
         <div>
           <div className="notice-head">

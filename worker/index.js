@@ -15,6 +15,8 @@ import * as menuIndex from '../functions/api/menu/index.js'
 import * as menuById from '../functions/api/menu/[id].js'
 import * as noticesIndex from '../functions/api/notices/index.js'
 import * as noticesById from '../functions/api/notices/[id].js'
+import * as galleryIndex from '../functions/api/gallery/index.js'
+import * as galleryById from '../functions/api/gallery/[id].js'
 import { errorResponse } from '../functions/_shared/validate.js'
 
 export default {
@@ -81,6 +83,18 @@ export default {
         const params = { id: noticeIdMatch[1] }
         if (method === 'PATCH') return await noticesById.onRequestPatch({ request, env, params })
         if (method === 'DELETE') return await noticesById.onRequestDelete({ request, env, params })
+      }
+
+      if (pathname === '/api/gallery' && method === 'GET') {
+        return await galleryIndex.onRequestGet({ request, env })
+      }
+      if (pathname === '/api/gallery' && method === 'POST') {
+        return await galleryIndex.onRequestPost({ request, env })
+      }
+      const galleryIdMatch = pathname.match(/^\/api\/gallery\/([^/]+)$/)
+      if (galleryIdMatch) {
+        const params = { id: galleryIdMatch[1] }
+        if (method === 'DELETE') return await galleryById.onRequestDelete({ request, env, params })
       }
     } catch (err) {
       console.error(err)
