@@ -66,11 +66,12 @@
 .brand {
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 1.15rem;
-  color: var(--navy-dark);
-  white-space: nowrap;
+}
+
+.brand-logo {
+  display: block;
+  height: 40px;
+  width: auto;
 }
 
 .main-nav ul {
@@ -152,8 +153,8 @@
 }
 
 @media (max-width: 520px) {
-  .brand span {
-    font-size: 1rem;
+  .brand-logo {
+    height: 32px;
   }
 
   .topbar-inner {

@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AdminAccessButton from './AdminAccessButton'
+import brandLogo from '../assets/brand-logo.png'
 import './Header.css'
 
 const NAV_ITEMS = [
@@ -63,15 +64,7 @@ export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNo
 
       <div className="mainbar">
         <a href="#top" className="brand">
-          <svg className="brand-icon" viewBox="0 0 40 40" width="34" height="34">
-            <circle cx="20" cy="20" r="20" fill="#1c3350" />
-            <path
-              d="M9 21c4-6.5 12-9 18-6.5-2.7 1.3-4.6 3.2-6 6.5 1.4 3.3 3.3 5.2 6 6.5-6 2.5-14 0-18-6.5z"
-              fill="#c69a5e"
-            />
-            <circle cx="13.2" cy="18.5" r="1.3" fill="#1c3350" />
-          </svg>
-          <span>대아리 운암상회</span>
+          <img src={brandLogo} alt="대아리 운암상회" className="brand-logo" />
         </a>
 
         <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
