@@ -1,0 +1,74 @@
+.manage-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 0 16px;
+  padding: 0;
+  list-style: none;
+}
+
+.manage-list-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.manage-list-item.editing {
+  border-color: var(--navy);
+  background: var(--cream);
+}
+
+.manage-list-main {
+  min-width: 0;
+}
+
+.manage-list-title {
+  margin: 0 0 2px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.manage-list-desc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  word-break: break-word;
+}
+
+.manage-list-actions {
+  display: flex;
+  gap: 6px;
+  flex: none;
+}
+
+.manage-form-title {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.manage-form-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.manage-form-actions .btn-primary {
+  flex: 1;
+}
+
+.modal-form textarea {
+  font-family: inherit;
+  font-size: 0.95rem;
+  color: var(--text-dark);
+  padding: 9px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--white);
+  resize: vertical;
+  min-height: 80px;
+}

@@ -56,3 +56,43 @@ export function fetchAdminReservations(date, adminToken) {
     headers: { 'x-admin-token': adminToken },
   })
 }
+
+export function fetchMenuItems() {
+  return request('/menu')
+}
+
+export function createMenuItem(payload, adminToken) {
+  return request('/menu', { method: 'POST', body: payload, headers: { 'x-admin-token': adminToken } })
+}
+
+export function updateMenuItem(id, payload, adminToken) {
+  return request(`/menu/${id}`, {
+    method: 'PATCH',
+    body: payload,
+    headers: { 'x-admin-token': adminToken },
+  })
+}
+
+export function deleteMenuItem(id, adminToken) {
+  return request(`/menu/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
+}
+
+export function fetchNotices() {
+  return request('/notices')
+}
+
+export function createNotice(payload, adminToken) {
+  return request('/notices', { method: 'POST', body: payload, headers: { 'x-admin-token': adminToken } })
+}
+
+export function updateNotice(id, payload, adminToken) {
+  return request(`/notices/${id}`, {
+    method: 'PATCH',
+    body: payload,
+    headers: { 'x-admin-token': adminToken },
+  })
+}
+
+export function deleteNotice(id, adminToken) {
+  return request(`/notices/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
+}

@@ -18,6 +18,17 @@
   margin-bottom: 8px;
 }
 
+.pick-col-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.pick-col-head .section-title {
+  margin-bottom: 8px;
+}
+
 .section-sub {
   color: var(--text-muted);
   font-size: 0.9rem;
@@ -31,10 +42,25 @@
 }
 
 .dish-card {
+  display: block;
+  width: 100%;
   background: var(--white);
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--border);
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.dish-card:hover,
+.dish-card:focus-visible {
+  box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 .dish-thumb {

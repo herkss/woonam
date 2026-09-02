@@ -17,7 +17,14 @@ function buildMonthGrid(year, month) {
   return cells
 }
 
-export default function Calendar({ initialDate = new Date(), onSelectDate, onAdminSelectDate, admin }) {
+export default function Calendar({
+  initialDate = new Date(),
+  onSelectDate,
+  onAdminSelectDate,
+  admin,
+  onOpenMenuManage,
+  onOpenNoticeManage,
+}) {
   const [cursor, setCursor] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
   )
@@ -57,7 +64,11 @@ export default function Calendar({ initialDate = new Date(), onSelectDate, onAdm
           <span>
             {year}년 {month + 1}월
           </span>
-          <AdminAccessButton admin={admin} />
+          <AdminAccessButton
+            admin={admin}
+            onOpenMenuManage={onOpenMenuManage}
+            onOpenNoticeManage={onOpenNoticeManage}
+          />
         </span>
         <button type="button" className="calendar-nav-btn" aria-label="다음 달" onClick={goNext}>
           &#8250;

@@ -127,3 +127,64 @@ export async function cancelReservation(env, id) {
     .bind(id)
     .run()
 }
+
+export async function listMenuItems(env) {
+  const { results } = await env.DB.prepare(
+    `SELECT * FROM menu_items ORDER BY sort_order ASC, id ASC`,
+  ).all()
+  return results
+}
+
+export async function getMenuItem(env, id) {
+  return env.DB.prepare(`SELECT * FROM menu_items WHERE id = ?1`).bind(id).first()
+}
+
+export async function createMenuItem(env, { name, price, description, imageUrl, sortOrder }) {
+  return env.DB.prepare(
+    `INSERT INTO menu_items (name, price, description, image_url, sort_order)
+     VALUES (?1, ?2, ?3, ?4, ?5) RETURNING *`,
+  )
+    .bind(name, price, description, imageUrl, sortOrder)
+    .first()
+}
+
+export async function updateMenuItem(env, id, { name, price, description, imageUrl, sortOrder }) {
+  return env.DB.prepare(
+    `UPDATE menu_items
+     SET name = ?2, price = ?3, description = ?4, image_url = ?5, sort_order = ?6, updated_at = datetime('now')
+     WHERE id = ?1 RETURNING *`,
+  )
+    .bind(id, name, price, description, imageUrl, sortOrder)
+    .first()
+}
+
+export async function deleteMenuItem(env, id) {
+  await env.DB.prepare(`DELETE FROM menu_items WHERE id = ?1`).bind(id).run()
+}
+
+export async function listNotices(env) {
+  const { results } = await env.DB.prepare(`SELECT * FROM notices ORDER BY id DESC`).all()
+  return results
+}
+
+export async function getNotice(env, id) {
+  return env.DB.prepare(`SELECT * FROM notices WHERE id = ?1`).bind(id).first()
+}
+
+export async function createNotice(env, { title, content }) {
+  return env.DB.prepare(`INSERT INTO notices (title, content) VALUES (?1, ?2) RETURNING *`)
+    .bind(title, content)
+    .first()
+}
+
+export async function updateNotice(env, id, { title, content }) {
+  return env.DB.prepare(
+    `UPDATE notices SET title = ?2, content = ?3, updated_at = datetime('now') WHERE id = ?1 RETURNING *`,
+  )
+    .bind(id, title, content)
+    .first()
+}
+
+export async function deleteNotice(env, id) {
+  await env.DB.prepare(`DELETE FROM notices WHERE id = ?1`).bind(id).run()
+}

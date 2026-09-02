@@ -11,6 +11,10 @@ import * as reservationById from '../functions/api/reservations/[id].js'
 import * as adminLogin from '../functions/api/admin/login.js'
 import * as adminChangePassword from '../functions/api/admin/change-password.js'
 import * as adminReservations from '../functions/api/admin/reservations.js'
+import * as menuIndex from '../functions/api/menu/index.js'
+import * as menuById from '../functions/api/menu/[id].js'
+import * as noticesIndex from '../functions/api/notices/index.js'
+import * as noticesById from '../functions/api/notices/[id].js'
 import { errorResponse } from '../functions/_shared/validate.js'
 
 export default {
@@ -51,6 +55,32 @@ export default {
       }
       if (pathname === '/api/admin/reservations' && method === 'GET') {
         return await adminReservations.onRequestGet({ request, env })
+      }
+
+      if (pathname === '/api/menu' && method === 'GET') {
+        return await menuIndex.onRequestGet({ request, env })
+      }
+      if (pathname === '/api/menu' && method === 'POST') {
+        return await menuIndex.onRequestPost({ request, env })
+      }
+      const menuIdMatch = pathname.match(/^\/api\/menu\/([^/]+)$/)
+      if (menuIdMatch) {
+        const params = { id: menuIdMatch[1] }
+        if (method === 'PATCH') return await menuById.onRequestPatch({ request, env, params })
+        if (method === 'DELETE') return await menuById.onRequestDelete({ request, env, params })
+      }
+
+      if (pathname === '/api/notices' && method === 'GET') {
+        return await noticesIndex.onRequestGet({ request, env })
+      }
+      if (pathname === '/api/notices' && method === 'POST') {
+        return await noticesIndex.onRequestPost({ request, env })
+      }
+      const noticeIdMatch = pathname.match(/^\/api\/notices\/([^/]+)$/)
+      if (noticeIdMatch) {
+        const params = { id: noticeIdMatch[1] }
+        if (method === 'PATCH') return await noticesById.onRequestPatch({ request, env, params })
+        if (method === 'DELETE') return await noticesById.onRequestDelete({ request, env, params })
       }
     } catch (err) {
       console.error(err)

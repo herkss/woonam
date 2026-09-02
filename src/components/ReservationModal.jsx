@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { createReservation, fetchReservationsByDate } from '../lib/api'
+import { createReservation, fetchMenuItems, fetchReservationsByDate } from '../lib/api'
 import { toDateKey, formatDateKorean } from '../lib/dates'
 import { formatTimeLabel } from '../lib/mask'
 import { useOtp } from '../lib/useOtp'
@@ -12,8 +12,6 @@ const TIME_SLOTS = Array.from({ length: 20 }, (_, i) => {
   return `${h}:${m}`
 })
 
-const MENU_OPTIONS = ['향어회', '매운탕', '기타(전화 문의)']
-
 const PHONE_RE = /^01[016789]\d{7,8}$/
 
 export default function ReservationModal({ date, onClose, onOpenManage }) {
@@ -23,6 +21,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
   const [tab, setTab] = useState('new') // 'new' | 'edit'
   const [existing, setExisting] = useState([])
   const [loadingList, setLoadingList] = useState(true)
+  const [menuOptions, setMenuOptions] = useState([])
 
   const [partySize, setPartySize] = useState(2)
   const [time, setTime] = useState('')
@@ -52,6 +51,18 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
       cancelled = true
     }
   }, [dateKey])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchMenuItems()
+      .then((res) => {
+        if (!cancelled) setMenuOptions([...res.items.map((item) => item.name), '기타(전화 문의)'])
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   const phoneDigits = phone.replace(/\D/g, '')
   const phoneValid = PHONE_RE.test(phoneDigits)
@@ -182,7 +193,7 @@ export default function ReservationModal({ date, onClose, onOpenManage }) {
                 메뉴
                 <select value={menu} onChange={(e) => setMenu(e.target.value)}>
                   <option value="">선택</option>
-                  {MENU_OPTIONS.map((m) => (
+                  {menuOptions.map((m) => (
                     <option key={m} value={m}>
                       {m}
                     </option>

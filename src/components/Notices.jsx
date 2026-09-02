@@ -1,10 +1,8 @@
+import { useEffect, useState } from 'react'
+import { fetchNotices } from '../lib/api'
 import { NoticeArt } from './FoodArt'
+import './ReservationModal.css'
 import './Notices.css'
-
-const NOTICES = [
-  { title: '일요일 정기 휴무 안내', date: '2026.08.20', tone: 'a' },
-  { title: '추석 연휴 영업시간 변경 안내', date: '2026.08.14', tone: 'b' },
-]
 
 const RESERVATIONS = [
   { title: '단체 예약 문의는 전화로 부탁드립니다', when: '1일 전' },
@@ -12,32 +10,53 @@ const RESERVATIONS = [
   { title: '온라인 예약 시 좌석은 자동 배정됩니다', when: '7일 전' },
 ]
 
-export default function Notices() {
+export default function Notices({ admin, onOpenNoticeManage, noticeVersion }) {
+  const [notices, setNotices] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    fetchNotices()
+      .then((res) => {
+        if (!cancelled) setNotices(res.notices)
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+  }, [noticeVersion])
+
   return (
     <section className="notices" id="gallery">
       <div className="section-grid">
         <div>
           <div className="notice-head">
             <h2 className="section-title">공지사항 및 이벤트</h2>
-            <div className="carousel-arrows">
-              <button type="button" aria-label="이전">
-                &#8249;
+            {admin?.isAdmin ? (
+              <button type="button" className="btn btn-outline-sm" onClick={onOpenNoticeManage}>
+                공지사항 관리
               </button>
-              <button type="button" aria-label="다음">
-                &#8250;
-              </button>
-            </div>
+            ) : (
+              <div className="carousel-arrows">
+                <button type="button" aria-label="이전">
+                  &#8249;
+                </button>
+                <button type="button" aria-label="다음">
+                  &#8250;
+                </button>
+              </div>
+            )}
           </div>
 
           <div className="notice-list">
-            {NOTICES.map((n) => (
-              <div className="notice-card" key={n.title}>
+            {notices.length === 0 && <p className="modal-existing-empty">등록된 공지사항이 없습니다</p>}
+            {notices.map((n, i) => (
+              <div className="notice-card" key={n.id}>
                 <div className="notice-thumb">
-                  <NoticeArt tone={n.tone} />
+                  <NoticeArt tone={i % 2 === 0 ? 'a' : 'b'} />
                 </div>
                 <div className="notice-body">
                   <p className="notice-title">{n.title}</p>
-                  <p className="notice-date">{n.date}</p>
+                  <p className="notice-date">{n.dateLabel}</p>
                 </div>
               </div>
             ))}

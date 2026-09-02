@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './AdminAccessButton.css'
 
-export default function AdminAccessButton({ admin }) {
+export default function AdminAccessButton({ admin, onOpenMenuManage, onOpenNoticeManage }) {
   const [open, setOpen] = useState(false) // 로그인 전: 비밀번호 입력 박스 / 로그인 후: 메뉴
   const [mode, setMode] = useState('login') // 'login' | 'menu' | 'change'
 
@@ -92,6 +92,26 @@ export default function AdminAccessButton({ admin }) {
             <div>
               <p className="admin-access-title">점주모드 사용 중</p>
               <p className="admin-access-hint">날짜를 클릭하면 전체 예약 내역을 볼 수 있습니다.</p>
+              <button
+                type="button"
+                className="btn btn-outline-sm"
+                onClick={() => {
+                  setOpen(false)
+                  onOpenMenuManage?.()
+                }}
+              >
+                메뉴 관리
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-sm"
+                onClick={() => {
+                  setOpen(false)
+                  onOpenNoticeManage?.()
+                }}
+              >
+                공지사항 관리
+              </button>
               <button type="button" className="btn btn-outline-sm" onClick={() => setMode('change')}>
                 비밀번호 변경
               </button>
