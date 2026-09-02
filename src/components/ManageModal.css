@@ -61,6 +61,31 @@
   flex: 1;
 }
 
+.manage-hint {
+  margin: -2px 0 0;
+  font-size: 0.76rem;
+  color: var(--text-muted);
+}
+
+.manage-image-preview {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.manage-image-preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+}
+
+.modal-form input[type='file'] {
+  padding: 6px;
+  font-size: 0.85rem;
+}
+
 .modal-form textarea {
   font-family: inherit;
   font-size: 0.95rem;

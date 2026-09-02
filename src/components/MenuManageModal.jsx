@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../lib/api'
+import { fileToResizedDataUrl } from '../lib/image'
 import './ReservationModal.css'
 import './ManageModal.css'
 
@@ -11,6 +12,8 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
   const [editingId, setEditingId] = useState(null) // null | 'new' | <id>
   const [form, setForm] = useState(emptyForm)
   const [saving, setSaving] = useState(false)
+  const [imageBusy, setImageBusy] = useState(false)
+  const [imageError, setImageError] = useState('')
 
   function load() {
     fetchMenuItems()
@@ -24,6 +27,7 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
     setForm(emptyForm)
     setEditingId('new')
     setError('')
+    setImageError('')
   }
 
   function startEdit(item) {
@@ -35,11 +39,34 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
     })
     setEditingId(item.id)
     setError('')
+    setImageError('')
   }
 
   function cancelEdit() {
     setEditingId(null)
     setForm(emptyForm)
+    setImageError('')
+  }
+
+  async function handleImageChange(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setImageError('')
+    setImageBusy(true)
+    try {
+      const dataUrl = await fileToResizedDataUrl(file)
+      setForm((f) => ({ ...f, imageUrl: dataUrl }))
+    } catch (err) {
+      setImageError(err.message)
+    } finally {
+      setImageBusy(false)
+    }
+  }
+
+  function clearImage() {
+    setForm((f) => ({ ...f, imageUrl: '' }))
+    setImageError('')
   }
 
   async function handleSave(e) {
@@ -148,15 +175,28 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
               />
             </label>
             <label>
-              이미지 URL
-              <input
-                value={form.imageUrl}
-                onChange={(e) => setForm((f) => ({ ...f, imageUrl: e.target.value }))}
-                placeholder="https://... (선택, 비워두면 기본 그림 표시)"
-              />
+              사진 (선택)
+              <input type="file" accept="image/*" onChange={handleImageChange} disabled={imageBusy} />
             </label>
+            {imageBusy && <p className="form-hint">사진 처리 중...</p>}
+            {imageError && <p className="form-hint error">{imageError}</p>}
+            {form.imageUrl && !imageBusy && (
+              <div className="manage-image-preview">
+                <img src={form.imageUrl} alt="미리보기" />
+                <button type="button" className="btn btn-outline-sm" onClick={clearImage}>
+                  사진 제거
+                </button>
+              </div>
+            )}
+            {!form.imageUrl && !imageBusy && (
+              <p className="manage-hint">사진을 첨부하지 않으면 기본 그림이 표시됩니다.</p>
+            )}
             <div className="manage-form-actions">
-              <button type="submit" className="btn btn-primary" disabled={!form.name.trim() || saving}>
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={!form.name.trim() || saving || imageBusy}
+              >
                 {saving ? '저장 중...' : '저장'}
               </button>
               <button type="button" className="btn btn-outline-sm" onClick={cancelEdit}>

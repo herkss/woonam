@@ -1,6 +1,6 @@
 import { getMenuItem, updateMenuItem, deleteMenuItem } from '../../_shared/db.js'
 import { verifyAdminToken } from '../../_shared/admin.js'
-import { errorResponse, jsonResponse } from '../../_shared/validate.js'
+import { errorResponse, isValidImageUrl, jsonResponse } from '../../_shared/validate.js'
 import { formatMenuItem } from './index.js'
 
 async function requireAdmin(request, env) {
@@ -32,6 +32,7 @@ export async function onRequestPatch({ request, env, params }) {
 
   if (!name) return errorResponse('메뉴명을 입력해주세요')
   if (!Number.isInteger(price) || price < 0) return errorResponse('가격이 올바르지 않습니다')
+  if (!isValidImageUrl(imageUrl)) return errorResponse('이미지 용량이 너무 큽니다. 더 작은 사진을 사용해주세요')
 
   const row = await updateMenuItem(env, id, {
     name,

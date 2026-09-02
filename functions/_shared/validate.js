@@ -26,6 +26,13 @@ export function isValidOtpCode(code) {
   return /^\d{6}$/.test(String(code || ''))
 }
 
+// 메뉴 사진은 리사이즈된 data URL(또는 외부 URL)로 저장되며, D1 컬럼 크기 한도를 넘지 않도록 길이를 제한
+export const MAX_IMAGE_URL_LENGTH = 700_000
+
+export function isValidImageUrl(url) {
+  return url.length <= MAX_IMAGE_URL_LENGTH
+}
+
 // 한국 시간(KST) 기준 오늘 날짜 (YYYY-MM-DD)
 export function todayKstDateKey() {
   const kst = new Date(Date.now() + 9 * 60 * 60 * 1000)
