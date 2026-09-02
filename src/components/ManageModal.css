@@ -23,7 +23,6 @@
 .manage-list-item {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
   gap: 10px;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -35,7 +34,16 @@
   background: var(--cream);
 }
 
+.manage-list-thumb {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex: none;
+}
+
 .manage-list-main {
+  flex: 1;
   min-width: 0;
 }
 

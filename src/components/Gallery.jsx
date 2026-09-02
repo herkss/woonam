@@ -36,8 +36,13 @@ export default function Gallery({ admin, onOpenGalleryManage, galleryVersion }) 
         <div className="gallery-grid">
           {images.map((img) => (
             <figure className="gallery-item" key={img.id}>
-              <img src={img.imageUrl} alt={img.caption || '매장 사진'} />
-              {img.caption && <figcaption>{img.caption}</figcaption>}
+              <img src={img.imageUrl} alt={img.title || '매장 사진'} />
+              {(img.title || img.content) && (
+                <figcaption>
+                  {img.title && <span className="gallery-item-title">{img.title}</span>}
+                  {img.content && <span className="gallery-item-content">{img.content}</span>}
+                </figcaption>
+              )}
             </figure>
           ))}
         </div>

@@ -105,6 +105,14 @@ export function createGalleryImage(payload, adminToken) {
   return request('/gallery', { method: 'POST', body: payload, headers: { 'x-admin-token': adminToken } })
 }
 
+export function updateGalleryImage(id, payload, adminToken) {
+  return request(`/gallery/${id}`, {
+    method: 'PATCH',
+    body: payload,
+    headers: { 'x-admin-token': adminToken },
+  })
+}
+
 export function deleteGalleryImage(id, adminToken) {
   return request(`/gallery/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
 }

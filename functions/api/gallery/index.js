@@ -6,7 +6,8 @@ export function formatGalleryImage(row) {
   return {
     id: row.id,
     imageUrl: row.image_url,
-    caption: row.caption || '',
+    title: row.title || '',
+    content: row.content || '',
     createdAt: row.created_at,
   }
 }
@@ -30,11 +31,12 @@ export async function onRequestPost({ request, env }) {
   }
 
   const imageUrl = String(body.imageUrl || '').trim()
-  const caption = String(body.caption || '').trim()
+  const title = String(body.title || '').trim()
+  const content = String(body.content || '').trim()
 
   if (!imageUrl) return errorResponse('사진을 선택해주세요')
   if (!isValidImageUrl(imageUrl)) return errorResponse('사진 용량이 너무 큽니다. 더 작은 사진을 사용해주세요')
 
-  const row = await createGalleryImage(env, { imageUrl, caption, sortOrder: 0 })
+  const row = await createGalleryImage(env, { imageUrl, title, content, sortOrder: 0 })
   return jsonResponse({ ok: true, image: formatGalleryImage(row) })
 }

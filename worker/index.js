@@ -94,6 +94,7 @@ export default {
       const galleryIdMatch = pathname.match(/^\/api\/gallery\/([^/]+)$/)
       if (galleryIdMatch) {
         const params = { id: galleryIdMatch[1] }
+        if (method === 'PATCH') return await galleryById.onRequestPatch({ request, env, params })
         if (method === 'DELETE') return await galleryById.onRequestDelete({ request, env, params })
       }
     } catch (err) {
