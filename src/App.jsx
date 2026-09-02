@@ -23,7 +23,12 @@ function App() {
 
   return (
     <>
-      <Header onOpenManage={() => setManageOpen(true)} />
+      <Header
+        onOpenManage={() => setManageOpen(true)}
+        admin={admin}
+        onOpenMenuManage={() => setMenuManageOpen(true)}
+        onOpenNoticeManage={() => setNoticeManageOpen(true)}
+      />
       <main>
         <Hero />
         <TodayPick
@@ -31,7 +36,6 @@ function App() {
           onAdminSelectDate={setAdminDate}
           admin={admin}
           onOpenMenuManage={() => setMenuManageOpen(true)}
-          onOpenNoticeManage={() => setNoticeManageOpen(true)}
           menuVersion={menuVersion}
         />
         <Notices admin={admin} onOpenNoticeManage={() => setNoticeManageOpen(true)} noticeVersion={noticeVersion} />

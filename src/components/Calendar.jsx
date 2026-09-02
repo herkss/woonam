@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { isPastDay, toDateKey, toMonthKey } from '../lib/dates'
 import { fetchReservedDatesInMonth } from '../lib/api'
-import AdminAccessButton from './AdminAccessButton'
 
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 
@@ -17,14 +16,7 @@ function buildMonthGrid(year, month) {
   return cells
 }
 
-export default function Calendar({
-  initialDate = new Date(),
-  onSelectDate,
-  onAdminSelectDate,
-  admin,
-  onOpenMenuManage,
-  onOpenNoticeManage,
-}) {
+export default function Calendar({ initialDate = new Date(), onSelectDate, onAdminSelectDate, admin }) {
   const [cursor, setCursor] = useState(
     new Date(initialDate.getFullYear(), initialDate.getMonth(), 1),
   )
@@ -61,14 +53,7 @@ export default function Calendar({
           &#8249;
         </button>
         <span className="calendar-header-title">
-          <span>
-            {year}년 {month + 1}월
-          </span>
-          <AdminAccessButton
-            admin={admin}
-            onOpenMenuManage={onOpenMenuManage}
-            onOpenNoticeManage={onOpenNoticeManage}
-          />
+          {year}년 {month + 1}월
         </span>
         <button type="button" className="calendar-nav-btn" aria-label="다음 달" onClick={goNext}>
           &#8250;

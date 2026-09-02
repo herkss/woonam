@@ -4,10 +4,12 @@
   padding: 80px 24px 40px;
 }
 
-.section-grid {
-  display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 56px;
+.menu-block {
+  margin-bottom: 56px;
+}
+
+.reserve-block {
+  max-width: 440px;
 }
 
 .section-title {
@@ -37,7 +39,7 @@
 
 .dish-list {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 20px;
 }
 
@@ -89,15 +91,18 @@
 }
 
 @media (max-width: 900px) {
-  .section-grid {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  .reserve-block {
+    max-width: none;
   }
 }
 
 @media (max-width: 520px) {
   .today-pick {
     padding: 90px 16px 30px;
+  }
+
+  .menu-block {
+    margin-bottom: 40px;
   }
 
   .dish-list {

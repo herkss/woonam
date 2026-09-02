@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import AdminAccessButton from './AdminAccessButton'
 import './Header.css'
 
 const NAV_ITEMS = [
@@ -37,7 +38,7 @@ function SocialIcons({ className = '' }) {
   )
 }
 
-export default function Header({ onOpenManage }) {
+export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNoticeManage }) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -51,6 +52,11 @@ export default function Header({ onOpenManage }) {
             예약 확인/변경
           </button>
           <SocialIcons />
+          <AdminAccessButton
+            admin={admin}
+            onOpenMenuManage={onOpenMenuManage}
+            onOpenNoticeManage={onOpenNoticeManage}
+          />
         </div>
       </div>
 

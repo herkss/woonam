@@ -158,6 +158,8 @@
 
   .topbar-inner {
     padding: 6px 16px;
+    flex-wrap: wrap;
+    row-gap: 4px;
   }
 
   .mainbar {

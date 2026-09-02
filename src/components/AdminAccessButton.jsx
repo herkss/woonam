@@ -91,7 +91,9 @@ export default function AdminAccessButton({ admin, onOpenMenuManage, onOpenNotic
           {mode === 'menu' && (
             <div>
               <p className="admin-access-title">점주모드 사용 중</p>
-              <p className="admin-access-hint">날짜를 클릭하면 전체 예약 내역을 볼 수 있습니다.</p>
+              <p className="admin-access-hint">
+                예약 현황 달력에서 날짜를 클릭하면 그날의 전체 예약 내역을 볼 수 있습니다.
+              </p>
               <button
                 type="button"
                 className="btn btn-outline-sm"
