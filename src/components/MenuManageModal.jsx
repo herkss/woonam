@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { fetchMenuItems, createMenuItem, updateMenuItem, deleteMenuItem } from '../lib/api'
 import { fileToResizedDataUrl } from '../lib/image'
+import { MENU_CATEGORIES } from '../lib/menuCategories'
 import './ReservationModal.css'
 import './ManageModal.css'
 
-const emptyForm = { name: '', price: '', description: '', imageUrl: '' }
+const emptyForm = { name: '', price: '', description: '', imageUrl: '', category: MENU_CATEGORIES[0] }
 
 export default function MenuManageModal({ adminToken, onClose, onChanged }) {
   const [items, setItems] = useState(null)
@@ -36,6 +37,7 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
       price: String(item.price),
       description: item.description || '',
       imageUrl: item.imageUrl || '',
+      category: MENU_CATEGORIES.includes(item.category) ? item.category : MENU_CATEGORIES[0],
     })
     setEditingId(item.id)
     setError('')
@@ -79,6 +81,7 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
         price: Number(form.price) || 0,
         description: form.description.trim(),
         imageUrl: form.imageUrl.trim(),
+        category: form.category,
       }
       if (editingId === 'new') {
         await createMenuItem(payload, adminToken)
@@ -122,28 +125,40 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
 
         {items && items.length === 0 && <p className="modal-existing-empty">등록된 메뉴가 없습니다</p>}
 
-        {items && items.length > 0 && (
-          <ul className="manage-list">
-            {items.map((item) => (
-              <li key={item.id} className={`manage-list-item ${editingId === item.id ? 'editing' : ''}`}>
-                <div className="manage-list-main">
-                  <p className="manage-list-title">
-                    {item.name} · {item.priceLabel}
-                  </p>
-                  {item.description && <p className="manage-list-desc">{item.description}</p>}
-                </div>
-                <div className="manage-list-actions">
-                  <button type="button" className="btn btn-outline-sm" onClick={() => startEdit(item)}>
-                    수정
-                  </button>
-                  <button type="button" className="btn btn-outline-sm" onClick={() => handleDelete(item)}>
-                    삭제
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-        )}
+        {items &&
+          items.length > 0 &&
+          MENU_CATEGORIES.map((category) => {
+            const categoryItems = items.filter((item) => item.category === category)
+            if (categoryItems.length === 0) return null
+            return (
+              <div key={category} className="manage-category">
+                <p className="manage-category-title">{category}</p>
+                <ul className="manage-list">
+                  {categoryItems.map((item) => (
+                    <li
+                      key={item.id}
+                      className={`manage-list-item ${editingId === item.id ? 'editing' : ''}`}
+                    >
+                      <div className="manage-list-main">
+                        <p className="manage-list-title">
+                          {item.name} · {item.priceLabel}
+                        </p>
+                        {item.description && <p className="manage-list-desc">{item.description}</p>}
+                      </div>
+                      <div className="manage-list-actions">
+                        <button type="button" className="btn btn-outline-sm" onClick={() => startEdit(item)}>
+                          수정
+                        </button>
+                        <button type="button" className="btn btn-outline-sm" onClick={() => handleDelete(item)}>
+                          삭제
+                        </button>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )
+          })}
 
         {editingId !== null ? (
           <form className="modal-form" onSubmit={handleSave}>
@@ -156,6 +171,19 @@ export default function MenuManageModal({ adminToken, onClose, onChanged }) {
                 placeholder="예: 향어회"
                 autoFocus
               />
+            </label>
+            <label>
+              분류
+              <select
+                value={form.category}
+                onChange={(e) => setForm((f) => ({ ...f, category: e.target.value }))}
+              >
+                {MENU_CATEGORIES.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </label>
             <label>
               가격 (원)

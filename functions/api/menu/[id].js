@@ -2,6 +2,7 @@ import { getMenuItem, updateMenuItem, deleteMenuItem } from '../../_shared/db.js
 import { verifyAdminToken } from '../../_shared/admin.js'
 import { errorResponse, isValidImageUrl, jsonResponse } from '../../_shared/validate.js'
 import { formatMenuItem } from './index.js'
+import { MENU_CATEGORIES } from '../../../src/lib/menuCategories.js'
 
 async function requireAdmin(request, env) {
   const url = new URL(request.url)
@@ -29,10 +30,12 @@ export async function onRequestPatch({ request, env, params }) {
   const price = Number(body.price)
   const description = String(body.description || '').trim()
   const imageUrl = String(body.imageUrl || '').trim()
+  const category = String(body.category || '')
 
   if (!name) return errorResponse('메뉴명을 입력해주세요')
   if (!Number.isInteger(price) || price < 0) return errorResponse('가격이 올바르지 않습니다')
   if (!isValidImageUrl(imageUrl)) return errorResponse('이미지 용량이 너무 큽니다. 더 작은 사진을 사용해주세요')
+  if (!MENU_CATEGORIES.includes(category)) return errorResponse('메뉴 분류를 선택해주세요')
 
   const row = await updateMenuItem(env, id, {
     name,
@@ -40,6 +43,7 @@ export async function onRequestPatch({ request, env, params }) {
     description,
     imageUrl: imageUrl || null,
     sortOrder: existing.sort_order,
+    category,
   })
   return jsonResponse({ ok: true, item: formatMenuItem(row) })
 }

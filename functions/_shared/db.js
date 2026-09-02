@@ -139,22 +139,22 @@ export async function getMenuItem(env, id) {
   return env.DB.prepare(`SELECT * FROM menu_items WHERE id = ?1`).bind(id).first()
 }
 
-export async function createMenuItem(env, { name, price, description, imageUrl, sortOrder }) {
+export async function createMenuItem(env, { name, price, description, imageUrl, sortOrder, category }) {
   return env.DB.prepare(
-    `INSERT INTO menu_items (name, price, description, image_url, sort_order)
-     VALUES (?1, ?2, ?3, ?4, ?5) RETURNING *`,
+    `INSERT INTO menu_items (name, price, description, image_url, sort_order, category)
+     VALUES (?1, ?2, ?3, ?4, ?5, ?6) RETURNING *`,
   )
-    .bind(name, price, description, imageUrl, sortOrder)
+    .bind(name, price, description, imageUrl, sortOrder, category)
     .first()
 }
 
-export async function updateMenuItem(env, id, { name, price, description, imageUrl, sortOrder }) {
+export async function updateMenuItem(env, id, { name, price, description, imageUrl, sortOrder, category }) {
   return env.DB.prepare(
     `UPDATE menu_items
-     SET name = ?2, price = ?3, description = ?4, image_url = ?5, sort_order = ?6, updated_at = datetime('now')
+     SET name = ?2, price = ?3, description = ?4, image_url = ?5, sort_order = ?6, category = ?7, updated_at = datetime('now')
      WHERE id = ?1 RETURNING *`,
   )
-    .bind(id, name, price, description, imageUrl, sortOrder)
+    .bind(id, name, price, description, imageUrl, sortOrder, category)
     .first()
 }
 

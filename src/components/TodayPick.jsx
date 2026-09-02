@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { fetchMenuItems } from '../lib/api'
+import { MENU_CATEGORIES } from '../lib/menuCategories'
 import { SashimiArt } from './FoodArt'
 import Calendar from './Calendar'
 import MenuDetailModal from './MenuDetailModal'
@@ -29,6 +30,11 @@ export default function TodayPick({
     }
   }, [menuVersion])
 
+  const groupedDishes = MENU_CATEGORIES.map((category) => ({
+    category,
+    items: dishes.filter((dish) => dish.category === category),
+  })).filter((group) => group.items.length > 0)
+
   return (
     <section className="today-pick" id="menu">
       <div className="menu-block">
@@ -45,22 +51,27 @@ export default function TodayPick({
         {dishes.length === 0 ? (
           <p className="modal-existing-empty">등록된 메뉴가 없습니다</p>
         ) : (
-          <div className="dish-list">
-            {dishes.map((dish) => (
-              <button
-                type="button"
-                className="dish-card"
-                key={dish.id}
-                onClick={() => setSelectedDish(dish)}
-              >
-                <div className="dish-thumb">
-                  {dish.imageUrl ? <img src={dish.imageUrl} alt={dish.name} /> : <SashimiArt />}
-                </div>
-                <p className="dish-name">{dish.name}</p>
-                <p className="dish-price">{dish.priceLabel}</p>
-              </button>
-            ))}
-          </div>
+          groupedDishes.map(({ category, items }) => (
+            <div className="menu-category" key={category}>
+              <h3 className="menu-category-title">{category}</h3>
+              <div className="dish-list">
+                {items.map((dish) => (
+                  <button
+                    type="button"
+                    className="dish-card"
+                    key={dish.id}
+                    onClick={() => setSelectedDish(dish)}
+                  >
+                    <div className="dish-thumb">
+                      {dish.imageUrl ? <img src={dish.imageUrl} alt={dish.name} /> : <SashimiArt />}
+                    </div>
+                    <p className="dish-name">{dish.name}</p>
+                    <p className="dish-price">{dish.priceLabel}</p>
+                  </button>
+                ))}
+              </div>
+            </div>
+          ))
         )}
       </div>
 

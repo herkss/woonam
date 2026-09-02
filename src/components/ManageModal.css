@@ -1,8 +1,21 @@
+.manage-category {
+  margin-bottom: 16px;
+}
+
+.manage-category-title {
+  margin: 0 0 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--navy);
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
 .manage-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin: 0 0 16px;
+  margin: 0;
   padding: 0;
   list-style: none;
 }

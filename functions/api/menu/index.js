@@ -1,6 +1,7 @@
 import { listMenuItems, createMenuItem } from '../../_shared/db.js'
 import { verifyAdminToken } from '../../_shared/admin.js'
 import { errorResponse, isValidImageUrl, jsonResponse } from '../../_shared/validate.js'
+import { MENU_CATEGORIES } from '../../../src/lib/menuCategories.js'
 
 export function formatMenuItem(row) {
   return {
@@ -11,6 +12,7 @@ export function formatMenuItem(row) {
     description: row.description || '',
     imageUrl: row.image_url || '',
     sortOrder: row.sort_order,
+    category: row.category,
   }
 }
 
@@ -36,10 +38,12 @@ export async function onRequestPost({ request, env }) {
   const price = Number(body.price)
   const description = String(body.description || '').trim()
   const imageUrl = String(body.imageUrl || '').trim()
+  const category = String(body.category || '')
 
   if (!name) return errorResponse('메뉴명을 입력해주세요')
   if (!Number.isInteger(price) || price < 0) return errorResponse('가격이 올바르지 않습니다')
   if (!isValidImageUrl(imageUrl)) return errorResponse('이미지 용량이 너무 큽니다. 더 작은 사진을 사용해주세요')
+  if (!MENU_CATEGORIES.includes(category)) return errorResponse('메뉴 분류를 선택해주세요')
 
   const row = await createMenuItem(env, {
     name,
@@ -47,6 +51,7 @@ export async function onRequestPost({ request, env }) {
     description,
     imageUrl: imageUrl || null,
     sortOrder: 0,
+    category,
   })
   return jsonResponse({ ok: true, item: formatMenuItem(row) })
 }
