@@ -24,21 +24,6 @@ export default function Hero() {
           />
         ))}
       </div>
-
-      <div className="reservation-card">
-        <div className="reservation-date">
-          <span className="rd-label">예약 날짜</span>
-          <span className="rd-day">9</span>
-          <span className="rd-day">9</span>
-        </div>
-        <div className="reservation-info">
-          <p className="ri-title">온라인예약</p>
-          <p className="ri-sub">20석 예약가능</p>
-        </div>
-        <a href="#reservation" className="btn btn-outline-sm">
-          확인하기
-        </a>
-      </div>
     </section>
   )
 }
