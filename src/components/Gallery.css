@@ -27,6 +27,13 @@
   overflow: hidden;
   border: 1px solid var(--border);
   background: var(--white);
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.gallery-item:hover {
+  box-shadow: 0 10px 20px -8px rgba(20, 15, 10, 0.25);
+  transform: translateY(-2px);
 }
 
 .gallery-item img {

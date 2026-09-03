@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react'
 import { fetchGalleryImages } from '../lib/api'
+import GalleryDetailModal from './GalleryDetailModal'
 import './ReservationModal.css'
 import './Gallery.css'
 
 export default function Gallery({ admin, onOpenGalleryManage, galleryVersion }) {
   const [images, setImages] = useState([])
+  const [selected, setSelected] = useState(null)
 
   useEffect(() => {
     let cancelled = false
@@ -35,7 +37,11 @@ export default function Gallery({ admin, onOpenGalleryManage, galleryVersion }) 
       ) : (
         <div className="gallery-grid">
           {images.map((img) => (
-            <figure className="gallery-item" key={img.id}>
+            <figure
+              className="gallery-item"
+              key={img.id}
+              onClick={() => setSelected(img)}
+            >
               <img src={img.imageUrl} alt={img.title || '매장 사진'} />
               {(img.title || img.content) && (
                 <figcaption>
@@ -47,6 +53,8 @@ export default function Gallery({ admin, onOpenGalleryManage, galleryVersion }) 
           ))}
         </div>
       )}
+
+      {selected && <GalleryDetailModal image={selected} onClose={() => setSelected(null)} />}
     </section>
   )
 }
