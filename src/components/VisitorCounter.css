@@ -1,0 +1,30 @@
+.visitor-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.visitor-counter svg {
+  color: var(--gold);
+  flex-shrink: 0;
+}
+
+.visitor-counter strong {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+@media (max-width: 520px) {
+  .visitor-counter {
+    font-size: 0.68rem;
+    padding: 2px 7px;
+  }
+}

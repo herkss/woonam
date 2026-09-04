@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import AdminAccessButton from './AdminAccessButton'
+import VisitorCounter from './VisitorCounter'
 import brandLogo from '../assets/brand-logo.png'
 import './Header.css'
 
@@ -59,6 +60,7 @@ export default function Header({ onOpenManage, admin, onOpenMenuManage, onOpenNo
             onOpenNoticeManage={onOpenNoticeManage}
             onOpenGalleryManage={onOpenGalleryManage}
           />
+          <VisitorCounter />
         </div>
       </div>
 

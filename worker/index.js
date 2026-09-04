@@ -17,6 +17,7 @@ import * as noticesIndex from '../functions/api/notices/index.js'
 import * as noticesById from '../functions/api/notices/[id].js'
 import * as galleryIndex from '../functions/api/gallery/index.js'
 import * as galleryById from '../functions/api/gallery/[id].js'
+import * as visitors from '../functions/api/visitors/index.js'
 import { errorResponse } from '../functions/_shared/validate.js'
 
 export default {
@@ -96,6 +97,13 @@ export default {
         const params = { id: galleryIdMatch[1] }
         if (method === 'PATCH') return await galleryById.onRequestPatch({ request, env, params })
         if (method === 'DELETE') return await galleryById.onRequestDelete({ request, env, params })
+      }
+
+      if (pathname === '/api/visitors' && method === 'GET') {
+        return await visitors.onRequestGet({ request, env })
+      }
+      if (pathname === '/api/visitors' && method === 'POST') {
+        return await visitors.onRequestPost({ request, env })
       }
     } catch (err) {
       console.error(err)

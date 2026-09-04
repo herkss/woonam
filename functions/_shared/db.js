@@ -219,3 +219,17 @@ export async function updateGalleryImage(env, id, { imageUrl, title, content, so
 export async function deleteGalleryImage(env, id) {
   await env.DB.prepare(`DELETE FROM gallery_images WHERE id = ?1`).bind(id).run()
 }
+
+export async function getVisitorCount(env) {
+  const row = await env.DB.prepare(`SELECT value FROM admin_config WHERE key = 'visitor_count'`).first()
+  return row ? Number(row.value) : 1500
+}
+
+export async function incrementVisitorCount(env) {
+  const row = await env.DB.prepare(
+    `INSERT INTO admin_config (key, value) VALUES ('visitor_count', '1501')
+     ON CONFLICT(key) DO UPDATE SET value = CAST(value AS INTEGER) + 1
+     RETURNING value`,
+  ).first()
+  return Number(row.value)
+}

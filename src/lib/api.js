@@ -116,3 +116,11 @@ export function updateGalleryImage(id, payload, adminToken) {
 export function deleteGalleryImage(id, adminToken) {
   return request(`/gallery/${id}`, { method: 'DELETE', headers: { 'x-admin-token': adminToken } })
 }
+
+export function fetchVisitorCount() {
+  return request('/visitors')
+}
+
+export function incrementVisitorCount() {
+  return request('/visitors', { method: 'POST' })
+}
